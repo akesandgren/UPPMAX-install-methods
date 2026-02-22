@@ -214,7 +214,7 @@ Load other prereqs for building the package tree.
     module load freetype/2.12.1
 
 
-Final setup.
+    Final setup.
 
     export DOWNLOAD_STATIC_LIBV8=1
     export _R_INSTALL_PACKAGES_ELAPSED_TIMEOUT_=1800
@@ -685,40 +685,11 @@ Produces
 This is enough. Move to the external packages, see below.
 
 
-#### RcppCGAL and AlphaHull3D are moved to the archive.
+#### AlphaHull3D  ... punt, see 4.3.1
 
-      cd $TOOLDIR/external_tarballs
-      wget https://cran.r-project.org/src/contrib/Archive/RcppCGAL/RcppCGAL_5.5.3.tar.gz
-      wget https://cran.r-project.org/src/contrib/Archive/AlphaHull3D/AlphaHull3D_2.0.0.tar.gz
-      R CMD INSTALL RcppCGAL_5.5.3.tar.gz
-      R CMD INSTALL AlphaHull3D_2.0.0.tar.gz
-      cd $VERSIONDIR
+#### RcppCGAL
 
-BUT, AlphaHull3D won't build.
-
-    n file included from /sw/apps/R_packages/4.3.1/rackham/RcppCGAL/include/CGAL/Triangulation_3.h:39:
-    /sw/apps/R_packages/4.3.1/rackham/RcppCGAL/include/CGAL/Triangulation_segment_traverser_3.h: At global scope:
-    /sw/apps/R_packages/4.3.1/rackham/RcppCGAL/include/CGAL/Triangulation_segment_traverser_3.h:371:49: error: expected identifier before string constant
-      371 |     std::tuple<Locate_type, int, int>Rcpp::stop("Exit Error") const
-            |                                                 ^~~~~~~~~~~~
-            /sw/apps/R_packages/4.3.1/rackham/RcppCGAL/include/CGAL/Triangulation_segment_traverser_3.h:371:49: error: expected ',' or '...' before string constant
-            /sw/apps/R_packages/4.3.1/rackham/RcppCGAL/include/CGAL/Triangulation_segment_traverser_3.h:371:38: error: invalid use of '::'
-              371 |     std::tuple<Locate_type, int, int>Rcpp::stop("Exit Error") const
-                    |                                      ^~~~
-
-Punt.
-
-
-I did a final run of inst1.R outside a screen. Several more packages installed!  `./installed.R -c` results now:
-
-    The R_packages/4.3.1 omnibus module for R version 4.3.1 (2023-06-16) and BioConductor version 3.17
-
-    A total of 23401 R packages are installed
-    A total of 23486 packages are available in CRAN and BioConductor
-    19814 CRAN packages are installed, out of 19927 available
-    3544 BioConductor-specific packages are installed, out of 3559 available
-    41 other R packages are installed. These are not in CRAN/BioConductor, are only available in the CRAN/BioConductor archives, or are hosted on github, gitlab or elsewhere
-
+      install.packages(c('RcppCGAL', 'approxOT', 'raybevel', 'WeightedTreemaps', 'WpProj'), Ncpus=20)
 
 
 
@@ -861,46 +832,62 @@ Once these are installed, many others can be installed.  Another round of `sourc
 
 Github-hosted packages.  Make sure hdf5/1.14.0 is loaded, loomR uses it.
 
-    devtools::install_github("stefpeschel/NetCoMi", dependencies=TRUE, upgrade='never')
-    devtools::install_github("variani/lme4qtl", ref='master', upgrade='never')
-    devtools::install_github("immunogenomics/harmony", ref = 'master', upgrade='never')
-    devtools::install_github("petrikemppainen/LDna", ref = 'master', upgrade='never')
-    devtools::install_github("madsalbertsen/ampvis2", upgrade='never')
-    devtools::install_github("akdess/CaSpER", upgrade='never')
-    devtools::install_github("mojaveazure/loomR", ref = "develop", upgrade='never')
-    devtools::install_github("mojaveazure/seurat-disk", upgrade='never')
-    remotes::install_github("satijalab/seurat-wrappers", upgrade='never')
-    devtools::install_github('theislab/kBET', upgrade='never')
-    devtools::install_github('immunogenomics/presto', upgrade='never')
-    devtools::install_github("GreenleafLab/ArchR", ref="master", upgrade='never')
-    devtools::install_github(repo="krumsieklab/sgi", subdir="sgi", upgrade='never')
-    devtools::install_github('VanLoo-lab/ascat/ASCAT', upgrade='never')
-    devtools::install_github("briatte/ggnet", upgrade='never')
-    devtools::install_github("ducciorocchini/cblindplot", upgrade='never')
-    devtools::install_github("RoseString/SCOPfunctions", upgrade='never')
-    devtools::install_github("McGranahanLab/TcellExTRECT", upgrade='never')
-    remotes::install_github('satijalab/azimuth', ref = 'master', upgrade='never')
-    devtools::install_github('WSpiller/MVMR', upgrade='never')
-    devtools::install_github("danro9685/CIMLR", ref="R", upgrade='never')
-    devtools::install_gitlab('CarlBrunius/MUVR', upgrade='never')
-    devtools::install_github('xuranw/MuSiC', upgrade='never')
-    devtools::install_github('cole-trapnell-lab/monocle3', dependencies=TRUE, upgrade='never')
-    devtools::install_github('SGDDNB/ShinyCell', upgrade="never", force=TRUE, build_vignettes=TRUE)
-    devtools::install_github("chris-mcginnis-ucsf/DoubletFinder", upgrade='never', build_vignettes=TRUE)
+For 4.5.1, for monocle3, the hassle of installing BPCells.  And others now.  grr is in the CRAN archive.
 
+    https://cran.r-project.org/src/contrib/Archive/grr/grr_0.9.5.tar.gz
+    R CMD INSTALL grr_0.9.5.tar.gz
+
+    install.packages(c('compoisson','phylosim','FField'), Ncpus=20)
+    devtools::install_github('cole-trapnell-lab/monocle3', dependencies=TRUE)
+    devtools::install_github("variani/lme4qtl", ref='master')
+    devtools::install_github("immunogenomics/harmony", ref = 'master')
+    devtools::install_github("petrikemppainen/LDna", ref = 'master')
+    devtools::install_github("madsalbertsen/ampvis2")
+    devtools::install_github("akdess/CaSpER")
+    devtools::install_github("mojaveazure/loomR", ref = "develop")
+
+    wget https://cran.r-project.org/src/contrib/Archive/huge/huge_1.3.5.tar.gz
+    R CMD INSTALL huge_1.3.5.tar.gz
+
+    BiocManager::install("metagMisc")
+    remotes::install_github("zdk123/SpiecEasi")
+    devtools::install_github("stefpeschel/NetCoMi", dependencies=TRUE)
+
+    devtools::install_github("mojaveazure/seurat-disk")
+    devtools::install_github('immunogenomics/presto')
+    remotes::install_github('satijalab/azimuth', ref = 'master')
+    remotes::install_github("satijalab/seurat-wrappers")
+
+    devtools::install_github('theislab/kBET')
+    devtools::install_github("GreenleafLab/ArchR", ref="master")
+    devtools::install_github(repo="krumsieklab/sgi", subdir="sgi")
+    devtools::install_github('VanLoo-lab/ascat/ASCAT')
+    devtools::install_github("briatte/ggnet")
+    devtools::install_github("ducciorocchini/cblindplot")
+    devtools::install_github("RoseString/SCOPfunctions")
+    devtools::install_github("McGranahanLab/TcellExTRECT")
+    devtools::install_github('WSpiller/MVMR')
+    devtools::install_github("danro9685/CIMLR", ref="R")
+    devtools::install_gitlab('CarlBrunius/MUVR')
+    devtools::install_github('xuranw/MuSiC')
+    devtools::install_github('SGDDNB/ShinyCell', upgrade="never", force=TRUE, build_vignettes=TRUE)
+    devtools::install_github("chris-mcginnis-ucsf/DoubletFinder", build_vignettes=TRUE)
 
 STAAR and its tutorials work with several other packages not provided with CRAN or BioConductor.
 
-    devtools::install_github("xihaoli/STAAR", upgrade='never')
-    devtools::install_github("zilinli1988/SCANG", upgrade='never')
-    devtools::install_github("xihaoli/STAARpipeline",ref="main", upgrade='never')
-    devtools::install_github("xihaoli/STAARpipelineSummary",ref="main", upgrade='never')
+    BiocManager::install("GENESIS")
+    BiocManager::install("TxDb.Hsapiens.UCSC.hg38.knownGene")
+    remotes::install_github("xihaoli/STAAR", Ncpus=20)
+    remotes::install_github("xihaoli/MultiSTAAR", Ncpus=20)
+    remotes::install_github("zilinli1988/SCANG", Ncpus=20)
+    remotes::install_github("xihaoli/STAARpipeline",ref="main", Ncpus=20)
+    remotes::install_github("xihaoli/STAARpipelineSummary",ref="main", Ncpus=20)
 
 HDL installs from a subdirectory of its repository.
 
-    devtools::install_github(repo="zhenin/HDL", subdir="HDL", upgrade='never')
+    remotes::install_github(repo="zhenin/HDL", subdir="HDL")
 
-### BPCells
+### BPCells  (this is outdated for 4.5.1)
 
 This appears not to require an older hdf5, so just leave hdf5/1.14.0 loaded.
 
@@ -951,7 +938,7 @@ module help, and defined the new mf file variable `reposroot` to point to
 `$VERSIONDIR/external`.
 
 
-### velocyto.R
+### velocyto.R  (still valid for 4.5.1)
 
 This has not been updated, so follow the same procedure.
 
@@ -967,6 +954,7 @@ Outside R, load the boost module compatible with the version of gcc used to buil
 
 Then inside R:
 
+    BiocManager::install('pcaMethods')
     devtools::install_github("douglasgscofield/velocyto.R")
 
 And verify outside R:
@@ -975,27 +963,37 @@ And verify outside R:
     ldd /sw/apps/R_packages/4.3.1/rackham/velocyto.R/libs/velocyto.R.so
 
 
+### Banksy  VoltRon
+
+
+    BiocManager::install('Banksy')
+
+    wget https://github.com/BIMSBbioinfo/VoltRon/archive/refs/tags/v0.2.2.tar.gz
+    module load OpenCV/4.12.0 tesseract/4.1.3
+    R CMD INSTALL VoltRon_0.2.2.tar.gz
+
 ### igraph0, CoxBoost, rrbgen, STITCH, EasyQC, EasyQC2, contamMix, LRAcluster, compoisson, phylosim, FField
 
 Also, install an outdated package `igraph0`, which has been superseded by
 `igraph` (installed above) but needed by some older procedures.
 
+    install.packages(c('CoxBoost', 'bigsnpr'), Ncpus=20)
+
     cd /sw/apps/R_packages/external_tarballs
 
     R CMD INSTALL igraph0_0.5.7.tar.gz
-    R CMD INSTALL CoxBoost_1.4.tar.gz
     R CMD INSTALL rrbgen_0.0.6.tar.gz
-    R CMD INSTALL STITCH_1.6.8.tar.gz
+    R CMD INSTALL STITCH_1.8.4.tar.gz       # downloaded new
     R CMD INSTALL EasyQC_23.8.tar.gz
-    R CMD INSTALL EasyQC2_1.1.1.tar.gz
-    R CMD INSTALL contamMix_1.0-10.tar.gz
+    R CMD INSTALL EasyQC2_1.1.2.tar.gz      # new package
+    R CMD INSTALL EasyStrata2_1.2.7.tar.gz  # new package
+    R CMD INSTALL Easy2_1.2.1.tar.gz        # new package
+
+    R CMD INSTALL contamMix_1.0-11.tar.gz
     R CMD INSTALL LRAcluster_1.0.tgz
 
-    wget https://cran.r-project.org/src/contrib/Archive/compoisson/compoisson_0.3.tar.gz
     R CMD INSTALL compoisson_0.3.tar.gz
-    wget https://cran.r-project.org/src/contrib/Archive/phylosim/phylosim_3.0.5.tar.gz
     R CMD INSTALL phylosim_3.0.5.tar.gz
-    wget https://cran.r-project.org/src/contrib/Archive/FField/FField_0.1.0.tar.gz
     R CMD INSTALL FField_0.1.0.tar.gz
 
 
@@ -1023,10 +1021,10 @@ latest releases from <https://github.com/MRCIEU/MRInstruments/releases> and
 have regular releases, and they also require another github-hosted package
 called TwoSampleMR.  So, we do the above to set up our R environment and do all
 this inside R:
-  
 
-    devtools::install_github("MRCIEU/TwoSampleMR", upgrade='never')
-    devtools::install_github("MRCIEU/MRInstruments", upgrade='never')
+
+    devtools::install_github("MRCIEU/TwoSampleMR")
+    devtools::install_github("MRCIEU/MRInstruments")
 
 MRPracticals does not install because if its vignettes. Create a tarball separately and install from that.
 
@@ -1164,101 +1162,969 @@ package trees without fearing conflicting with this module.
 Note about sqlite when running under RStudio
 --------------------------------------------
 
-RStudio has its own means of handling shared libraries needed by R packages.
-This means that sometimes loading of shared libraries within packages does not
-behave as it does when running R from the command line.
+See R_packages-4.3.1_install-README.md
 
-One example is monocle3, which uses spatial libraries including that from
-GDAL/3.7.2, which requires sqlite/3.34.0 the location of which is properly
-hinted in its RPATH. With nothing loaded:
-
-    rackham5: /sw/apps/R_packages $ ldd /sw/apps/GDAL/3.7.2/rackham/lib64/libgdal.so.33
-        ...
-        libsqlite3.so.0 => /sw/apps/sqlite/3.34.0/rackham/lib/libsqlite3.so.0 (0x00002af6ce485000)
-        ...
-    rackham5: /sw/apps/R_packages $ patchelf --print-rpath /sw/apps/GDAL/3.7.2/rackham/lib64/libgdal.so.33
-    /sw/apps/GDAL/3.7.2/rackham/lib64:/sw/libs/libdeflate/1.19/rackham/lib64:/sw/libs/freetype/2.12.1/rackham/lib:/sw/libs/giflib/5.1.4/rackham/lib:/sw/libs/cairo/1.17.4/rackham/lib:/sw/libs/Qhull/2020.2/rackham/lib:/sw/libs/GEOS/3.12.0-gcc12.3.0/rackham/lib64:/sw/libs/libwebp/1.3.0/rackham/lib:/sw/libs/libgeotiff/1.7.1/rackham/lib:/sw/libs/libtiff/4.5.0/rackham/lib:/sw/libs/OpenJPEG/2.5.0/rackham/lib:/sw/libs/FYBA/4.1.1/rackham/lib:/sw/libs/Poppler/23.09.0/rackham/lib64:/sw/libs/glib/2.72.1/rackham/lib64:/sw/libs/PROJ/9.1.1/rackham/lib64:/sw/libs/Armadillo/9.700.2/rackham/lib64:/sw/libs/libcurl/7.85.0/rackham/lib:/sw/libs/lz4/1.9.2/rackham/lib:/sw/libs/zstd/1.5.2/rackham/lib:/sw/libs/zlib/1.2.12/rackham/lib:/sw/apps/xz/5.2.6/rackham/lib:/sw/libs/netcdf/4.9.2/rackham/lib64:/sw/libs/hdf5/1.14.0/rackham/lib:/sw/libs/szip/2.1.1/rackham/lib:/sw/apps/sqlite/3.34.0/rackham/lib:/sw/comp/gcc/12.3.0_rackham/lib:/sw/comp/gcc/12.3.0_rackham/lib64:/sw/libs/bzip2/1.0.8/rackham/lib:/sw/libs/libicu/5.2-4/rackham/usr/lib64:/sw/libs/readline/6.2-11/rackham/lib64:/sw/libs/readline/6.2-11/rackham/usr/lib64
-
-Running `library(monocle3)` within R after loading R_packages/4.3.1 works just fine.
-
-But doing the same within RStudio fails.
-
-    $ module load RStudio/2023.06.2-561
-    library(monocle3)
-    ...
-    Error: package or namespace load failed for 'monocle3' in dyn.load(file, DLLpath = DLLpath, ...):
-    unable to load shared object '/sw/apps/R_packages/4.3.1/rackham/terra/libs/terra.so':
-    /sw/apps/GDAL/3.7.2/rackham/lib64/libgdal.so.33: undefined symbol: sqlite3_trace_v2
-
-There needs to be a load of `sqlite/3.34.0` prior to running `rstudio` so that
-the proper sqlite library is "pre-loaded."
+In short, when using monocle3 within RStudio, there needs to be a load of
+`sqlite/3.34.0` prior to running `rstudio` so that the proper sqlite library is
+"pre-loaded."
 
 
+Adding a handful of other packages
+==================================
+
+first round
+-----------
+
+    dd <- read.delim('/sw/apps/R_packages/external_tarballs/BioConductor-3.22-t1.txt', header=FALSE, colClasses="character")[,1]
+    BiocManager::install(dd)
+
+Packages listed in /sw/apps/R_packages/external_tarballs/BioConductor-3.22-t1.txt are:
+
+    BSgenome BSgenome.Alyrata.JGI.v1 BSgenome.Amellifera.BeeBase.assembly4
+    BSgenome.Amellifera.NCBI.AmelHAv3.1 BSgenome.Amellifera.UCSC.apiMel2
+    BSgenome.Amellifera.UCSC.apiMel2.masked BSgenome.Aofficinalis.NCBI.V1
+    BSgenome.Athaliana.TAIR.04232008 BSgenome.Athaliana.TAIR.TAIR9
+    BSgenome.Btaurus.UCSC.bosTau3 BSgenome.Btaurus.UCSC.bosTau3.masked
+    BSgenome.Btaurus.UCSC.bosTau4 BSgenome.Btaurus.UCSC.bosTau4.masked
+    BSgenome.Btaurus.UCSC.bosTau6 BSgenome.Btaurus.UCSC.bosTau6.masked
+    BSgenome.Btaurus.UCSC.bosTau8 BSgenome.Btaurus.UCSC.bosTau9
+    BSgenome.Btaurus.UCSC.bosTau9.masked BSgenome.Carietinum.NCBI.v1
+    BSgenome.Celegans.UCSC.ce10 BSgenome.Celegans.UCSC.ce11
+    BSgenome.Celegans.UCSC.ce2 BSgenome.Celegans.UCSC.ce6
+    BSgenome.Cfamiliaris.UCSC.canFam2 BSgenome.Cfamiliaris.UCSC.canFam2.masked
+    BSgenome.Cfamiliaris.UCSC.canFam3 BSgenome.Cfamiliaris.UCSC.canFam3.masked
+    BSgenome.Cjacchus.UCSC.calJac3 BSgenome.Cjacchus.UCSC.calJac4
+    BSgenome.CneoformansVarGrubiiKN99.NCBI.ASM221672v1
+    BSgenome.Creinhardtii.JGI.v5.6 BSgenome.Dmelanogaster.UCSC.dm2
+    BSgenome.Dmelanogaster.UCSC.dm2.masked BSgenome.Dmelanogaster.UCSC.dm3
+    BSgenome.Dmelanogaster.UCSC.dm3.masked BSgenome.Dmelanogaster.UCSC.dm6
+    BSgenome.Drerio.UCSC.danRer10 BSgenome.Drerio.UCSC.danRer11
+    BSgenome.Drerio.UCSC.danRer5 BSgenome.Drerio.UCSC.danRer5.masked
+    BSgenome.Drerio.UCSC.danRer6 BSgenome.Drerio.UCSC.danRer6.masked
+    BSgenome.Drerio.UCSC.danRer7 BSgenome.Drerio.UCSC.danRer7.masked
+    BSgenome.Dvirilis.Ensembl.dvircaf1 BSgenome.Ecoli.NCBI.20080805
+    BSgenome.Gaculeatus.UCSC.gasAcu1 BSgenome.Gaculeatus.UCSC.gasAcu1.masked
+    BSgenome.Ggallus.UCSC.galGal3 BSgenome.Ggallus.UCSC.galGal3.masked
+    BSgenome.Ggallus.UCSC.galGal4 BSgenome.Ggallus.UCSC.galGal4.masked
+    BSgenome.Ggallus.UCSC.galGal5 BSgenome.Ggallus.UCSC.galGal6
+    BSgenome.Gmax.NCBI.Gmv40 BSgenome.Hsapiens.1000genomes.hs37d5
+    BSgenome.Hsapiens.NCBI.GRCh38 BSgenome.Hsapiens.NCBI.T2T.CHM13v2.0
+    BSgenome.Hsapiens.UCSC.hg17 BSgenome.Hsapiens.UCSC.hg17.masked
+    BSgenome.Hsapiens.UCSC.hg18 BSgenome.Hsapiens.UCSC.hg18.masked
+    BSgenome.Hsapiens.UCSC.hg19 BSgenome.Hsapiens.UCSC.hg19.masked
+    BSgenome.Hsapiens.UCSC.hg38 BSgenome.Hsapiens.UCSC.hg38.dbSNP151.major
+    BSgenome.Hsapiens.UCSC.hg38.dbSNP151.minor BSgenome.Hsapiens.UCSC.hg38.masked
+    BSgenome.Hsapiens.UCSC.hs1 BSgenome.Mdomestica.UCSC.monDom5
+    BSgenome.Mfascicularis.NCBI.5.0 BSgenome.Mfascicularis.NCBI.6.0
+    BSgenome.Mfuro.UCSC.musFur1 BSgenome.Mmulatta.UCSC.rheMac10
+    BSgenome.Mmulatta.UCSC.rheMac2 BSgenome.Mmulatta.UCSC.rheMac2.masked
+    BSgenome.Mmulatta.UCSC.rheMac3 BSgenome.Mmulatta.UCSC.rheMac3.masked
+    BSgenome.Mmulatta.UCSC.rheMac8 BSgenome.Mmusculus.UCSC.mm10
+    BSgenome.Mmusculus.UCSC.mm10.masked BSgenome.Mmusculus.UCSC.mm39
+    BSgenome.Mmusculus.UCSC.mm8 BSgenome.Mmusculus.UCSC.mm8.masked
+    BSgenome.Mmusculus.UCSC.mm9 BSgenome.Mmusculus.UCSC.mm9.masked
+    BSgenome.Osativa.MSU.MSU7 BSgenome.Ppaniscus.UCSC.panPan1
+    BSgenome.Ppaniscus.UCSC.panPan2 BSgenome.Ptroglodytes.UCSC.panTro2
+    BSgenome.Ptroglodytes.UCSC.panTro2.masked BSgenome.Ptroglodytes.UCSC.panTro3
+    BSgenome.Ptroglodytes.UCSC.panTro3.masked BSgenome.Ptroglodytes.UCSC.panTro5
+    BSgenome.Ptroglodytes.UCSC.panTro6 BSgenome.Rnorvegicus.UCSC.rn4
+    BSgenome.Rnorvegicus.UCSC.rn4.masked BSgenome.Rnorvegicus.UCSC.rn5
+    BSgenome.Rnorvegicus.UCSC.rn5.masked BSgenome.Rnorvegicus.UCSC.rn6
+    BSgenome.Rnorvegicus.UCSC.rn7 BSgenome.Scerevisiae.UCSC.sacCer1
+    BSgenome.Scerevisiae.UCSC.sacCer2 BSgenome.Scerevisiae.UCSC.sacCer3
+    BSgenome.Sscrofa.UCSC.susScr11 BSgenome.Sscrofa.UCSC.susScr3
+    BSgenome.Sscrofa.UCSC.susScr3.masked BSgenome.Tgondii.ToxoDB.7.0
+    BSgenome.Tguttata.UCSC.taeGut1 BSgenome.Tguttata.UCSC.taeGut1.masked
+    BSgenome.Tguttata.UCSC.taeGut2 BSgenome.Vvinifera.URGI.IGGP12Xv0
+    BSgenome.Vvinifera.URGI.IGGP12Xv2 BSgenome.Vvinifera.URGI.IGGP8X BSgenomeForge
+    GenomeAdapt GenomeAdmixR GenomeInfoDb GenomeInfoDbData
+    MafDb.1Kgenomes.phase1.GRCh38 MafDb.1Kgenomes.phase1.hs37d5
+    MafDb.1Kgenomes.phase3.GRCh38 MafDb.1Kgenomes.phase3.hs37d5 drosgenome1.db
+    drosgenome1cdf drosgenome1probe genomeIntervals genomes genomewidesnp5Crlmm
+    genomewidesnp6Crlmm metagenomeFeatures metagenomeSeq pd.drosgenome1
+    pd.genomewidesnp.5 pd.genomewidesnp.6 rGenomeTracks rGenomeTracksData refGenome
+
+
+picking up what didn't install
+------------------------------
+
+    install.packages('robust', Ncpus=20)
+    BiocManager::install('qvalue')
+
+    wget https://cran.r-project.org/src/contrib/Archive/GenomeAdapt/GenomeAdapt_1.0.0.tar.gz
+    R CMD INSTALL GenomeAdapt_1.0.0.tar.gz
+
+    remotes::install_github("HCBravoLab/metagenomeFeatures", Ncpus=20)
+    BiocManager::install('metagenomeSeq')
+
+
+second round
+------------
+
+    dd <- read.delim('/sw/apps/R_packages/external_tarballs/BioConductor-3.22-t2.txt', header=FALSE, colClasses="character")[,1]
+    BiocManager::install(dd)
+
+Packages listed in /sw/apps/R_packages/external_tarballs/BioConductor-3.22-t2.txt are:
+
+    BSgenome.Hsapiens.UCSC.hg38.dbSNP151.major
+    BSgenome.Hsapiens.UCSC.hg38.dbSNP151.minor FunciSNP FunciSNP.data FunctanSNP
+    ICSNP PolyPhen.Hsapiens.dbSNP131 SIFT.Hsapiens.dbSNP132 SIFT.Hsapiens.dbSNP137
+    SNPRelate SNPannotator SNPassoc SNPediaR SNPfiltR SNPhood SNPhoodData SNPknock
+    SNPlocs.Hsapiens.dbSNP144.GRCh37 SNPlocs.Hsapiens.dbSNP144.GRCh38
+    SNPlocs.Hsapiens.dbSNP149.GRCh38 SNPlocs.Hsapiens.dbSNP150.GRCh38
+    SNPlocs.Hsapiens.dbSNP155.GRCh37 SNPlocs.Hsapiens.dbSNP155.GRCh38
+    XtraSNPlocs.Hsapiens.dbSNP144.GRCh37 XtraSNPlocs.Hsapiens.dbSNP144.GRCh38 atSNP
+    beadarraySNP cpvSNP minSNPs survSNP pd.081229.hg18.promoter.medip.hx1
+    pd.2006.07.18.hg18.refseq.promoter pd.2006.07.18.mm8.refseq.promoter
+    pd.2006.10.31.rn34.refseq.promoter pd.ag pd.aragene.1.0.st pd.aragene.1.1.st
+    pd.atdschip.tiling pd.ath1.121501 pd.barley1 pd.bovgene.1.0.st
+    pd.bovgene.1.1.st pd.bovine pd.bsubtilis pd.cangene.1.0.st pd.cangene.1.1.st
+    pd.canine pd.canine.2 pd.celegans pd.charm.hg18.example pd.chicken
+    pd.chigene.1.0.st pd.chigene.1.1.st pd.chogene.2.0.st pd.chogene.2.1.st
+    pd.citrus pd.clariom.d.human pd.clariom.s.human pd.clariom.s.human.ht
+    pd.clariom.s.mouse pd.clariom.s.mouse.ht pd.clariom.s.rat pd.clariom.s.rat.ht
+    pd.cotton pd.cyngene.1.0.st pd.cyngene.1.1.st pd.cyrgene.1.0.st
+    pd.cyrgene.1.1.st pd.cytogenetics.array pd.drogene.1.0.st pd.drogene.1.1.st
+    pd.drosgenome1 pd.drosophila.2 pd.e.coli.2 pd.ecoli pd.ecoli.asv2
+    pd.elegene.1.0.st pd.elegene.1.1.st pd.equgene.1.0.st pd.equgene.1.1.st
+    pd.feinberg.hg18.me.hx1 pd.feinberg.mm8.me.hx1 pd.felgene.1.0.st
+    pd.felgene.1.1.st pd.fingene.1.0.st pd.fingene.1.1.st pd.genomewidesnp.5
+    pd.genomewidesnp.6 pd.guigene.1.0.st pd.guigene.1.1.st pd.hc.g110 pd.hg.focus
+    pd.hg.u133.plus.2 pd.hg.u133a pd.hg.u133a.2 pd.hg.u133a.tag pd.hg.u133b
+    pd.hg.u219 pd.hg.u95a pd.hg.u95av2 pd.hg.u95b pd.hg.u95c pd.hg.u95d pd.hg.u95e
+    pd.hg18.60mer.expr pd.ht.hg.u133.plus.pm pd.ht.hg.u133a pd.ht.mg.430a
+    pd.hta.2.0 pd.hu6800 pd.huex.1.0.st.v2 pd.hugene.1.0.st.v1 pd.hugene.1.1.st.v1
+    pd.hugene.2.0.st pd.hugene.2.1.st pd.maize pd.mapping250k.nsp
+    pd.mapping250k.sty pd.mapping50k.hind240 pd.mapping50k.xba240 pd.margene.1.0.st
+    pd.margene.1.1.st pd.medgene.1.0.st pd.medgene.1.1.st pd.medicago pd.mg.u74a
+    pd.mg.u74av2 pd.mg.u74b pd.mg.u74bv2 pd.mg.u74c pd.mg.u74cv2 pd.mirna.1.0
+    pd.mirna.2.0 pd.mirna.3.0 pd.mirna.3.1 pd.mirna.4.0 pd.moe430a pd.moe430b
+    pd.moex.1.0.st.v1 pd.mogene.1.0.st.v1 pd.mogene.1.1.st.v1 pd.mogene.2.0.st
+    pd.mogene.2.1.st pd.mouse430.2 pd.mouse430a.2 pd.mta.1.0 pd.mu11ksuba
+    pd.mu11ksubb pd.nugo.hs1a520180 pd.nugo.mm1a520177 pd.ovigene.1.0.st
+    pd.ovigene.1.1.st pd.pae.g1a pd.plasmodium.anopheles pd.poplar pd.porcine
+    pd.porgene.1.0.st pd.porgene.1.1.st pd.rabgene.1.0.st pd.rabgene.1.1.st
+    pd.rae230a pd.rae230b pd.raex.1.0.st.v1 pd.ragene.1.0.st.v1 pd.ragene.1.1.st.v1
+    pd.ragene.2.0.st pd.ragene.2.1.st pd.rat230.2 pd.rcngene.1.0.st
+    pd.rcngene.1.1.st pd.rg.u34a pd.rg.u34b pd.rg.u34c pd.rhegene.1.0.st
+    pd.rhegene.1.1.st pd.rhesus pd.rice pd.rjpgene.1.0.st pd.rjpgene.1.1.st
+    pd.rn.u34 pd.rta.1.0 pd.rusgene.1.0.st pd.rusgene.1.1.st pd.s.aureus pd.soybean
+    pd.soygene.1.0.st pd.soygene.1.1.st pd.sugar.cane pd.tomato pd.u133.x3p
+    pd.vitis.vinifera pd.wheat pd.x.laevis.2 pd.x.tropicalis pd.xenopus.laevis
+    pd.yeast.2 pd.yg.s98 pd.zebgene.1.0.st pd.zebgene.1.1.st pd.zebrafish
+    org.Ag.eg.db org.At.tair.db org.Bt.eg.db org.Ce.eg.db org.Cf.eg.db org.Dm.eg.db
+    org.Dr.eg.db org.EcK12.eg.db org.EcSakai.eg.db org.Gg.eg.db org.Hs.eg.db
+    org.Mm.eg.db org.Mmu.eg.db org.Mxanthus.db org.Pt.eg.db org.Rn.eg.db
+    org.Sc.sgd.db org.Ss.eg.db org.Xl.eg.db org zebrafish.db zebrafish.db0
+    zebrafishRNASeq zebrafishcdf zebrafishprobe vegalite vegan vegan3d vegawidget
+    vegclust vegdata vegperiod vegtable mogene.1.0.st.v1frmavecs
+    mogene10stprobeset.db mogene10sttranscriptcluster.db mogene10stv1cdf
+    mogene10stv1probe mogene11stprobeset.db mogene11sttranscriptcluster.db
+    mogene20stprobeset.db mogene20sttranscriptcluster.db mogene21stprobeset.db
+    mogene21sttranscriptcluster.db Rattus.norvegicus
+
+picking up what didn't install in the second round
+--------------------------------------------------
+
+    BiocManager::install(c('TxDb.Hsapiens.UCSC.hg19.knownGene', 'ChIPpeakAnno', 'snpStats'))
+
+    cd /sw/apps/R_packages/external_tarballs
+    wget https://www.bioconductor.org/packages/3.18/bioc/src/contrib/beadarraySNP_1.68.0.tar.gz
+    wget https://cran.r-project.org/src/contrib/Archive/SNPknock/SNPknock_0.8.2.tar.gz
+    wget https://bioconductor.org/packages/3.11/bioc/src/contrib/FunciSNP_1.32.0.tar.gz
+    R CMD INSTALL beadarraySNP_1.68.0.tar.gz
+    R CMD INSTALL SNPknock_0.8.2.tar.gz
+    R CMD INSTALL FunciSNP_1.32.0.tar.gz
+    R CMD INSTALL FunciSNP.data_1.21.0.tar.gz
+
+Continuing ...
+--------------
+
+    wget https://cran.r-project.org/src/contrib/Archive/CodeDepends/CodeDepends_0.6.6.tar.gz
+    R CMD INSTALL CodeDepends_0.6.6.tar.gz
+
+    BiocManager::install("rebook")
+    BiocManager::install("OSCA.intro")
+
+
+Installing all AnnotationData packages ...
+------------------------------------------
+
+    dd <- read.delim('/sw/apps/R_packages/external_tarballs/AnnotationData-3.22.txt', header=FALSE, colClasses="character")[,1]
+    BiocManager::install(dd)
+
+Packages listed in /sw/apps/R_packages/external_tarballs/AnnotationData-3.22.txt are:
+
+    GenomeInfoDbData GO.db org.Hs.eg.db org.Mm.eg.db HDO.db
+    TxDb.Hsapiens.UCSC.hg19.knownGene reactome.db BSgenome.Hsapiens.UCSC.hg38
+    TxDb.Hsapiens.UCSC.hg38.knownGene EnsDb.Hsapiens.v86 org.Rn.eg.db
+    hgu133plus2.db BSgenome.Mmusculus.UCSC.mm10 BSgenome.Hsapiens.UCSC.hg19
+    JASPAR2020 TxDb.Mmusculus.UCSC.mm10.knownGene
+    IlluminaHumanMethylation450kanno.ilmn12.hg19 DO.db BSgenome.Mmusculus.UCSC.mm39
+    FDb.InfiniumMethylation.hg19 IlluminaHumanMethylationEPICanno.ilm10b4.hg19
+    IlluminaHumanMethylation450kmanifest org.At.tair.db
+    IlluminaHumanMethylationEPICmanifest BSgenome.Rnorvegicus.UCSC.rn6 hgu95av2.db
+    hgu133a.db hgu133plus2cdf org.Sc.sgd.db org.Dm.eg.db EnsDb.Hsapiens.v75
+    TxDb.Dmelanogaster.UCSC.dm3.ensGene EnsDb.Mmusculus.v79
+    IlluminaHumanMethylationEPICv2anno.20a1.hg38 BSgenome.Hsapiens.NCBI.GRCh38
+    org.Dr.eg.db hgu95av2cdf Homo.sapiens IlluminaHumanMethylationEPICv2manifest
+    hgu95av2probe hugene10sttranscriptcluster.db PFAM.db BSgenome.Celegans.UCSC.ce2
+    TxDb.Mmusculus.UCSC.mm9.knownGene TxDb.Hsapiens.UCSC.hg18.knownGene hgu95a.db
+    illuminaHumanv4.db BSgenome.Hsapiens.1000genomes.hs37d5
+    BSgenome.Hsapiens.UCSC.hg18 BSgenome.Scerevisiae.UCSC.sacCer2
+    BSgenome.Dmelanogaster.UCSC.dm3 org.Ce.eg.db SNPlocs.Hsapiens.dbSNP144.GRCh37
+    drosophila2probe hgu133aprobe SNPlocs.Hsapiens.dbSNP155.GRCh38
+    SNPlocs.Hsapiens.dbSNP155.GRCh37 org.Bt.eg.db org.Ss.eg.db org.EcK12.eg.db
+    TxDb.Athaliana.BioMart.plantsmart22 SNPlocs.Hsapiens.dbSNP144.GRCh38 hgu133acdf
+    org.Gg.eg.db JASPAR2024 org.Mmu.eg.db hgu133a2cdf pd.hugene.1.0.st.v1
+    JASPAR2022 IlluminaHumanMethylationEPICanno.ilm10b2.hg19
+    TxDb.Rnorvegicus.UCSC.rn4.ensGene TxDb.Celegans.UCSC.ce6.ensGene
+    EnsDb.Hsapiens.v79 pd.hg.u133.plus.2 hgu133a2.db Mus.musculus org.Cf.eg.db
+    mouse4302.db PolyPhen.Hsapiens.dbSNP131 JASPAR2018 illuminaHumanv3.db
+    BSgenome.Mmusculus.UCSC.mm9 TxDb.Hsapiens.UCSC.hg19.lincRNAsTranscripts
+    BSgenome.Celegans.UCSC.ce11 FDb.UCSC.tRNAs SIFT.Hsapiens.dbSNP132
+    SIFT.Hsapiens.dbSNP137 BSgenome.Hsapiens.UCSC.hg38.masked pd.huex.1.0.st.v2
+    BSgenome.Scerevisiae.UCSC.sacCer3 TxDb.Celegans.UCSC.ce11.ensGene hgu95acdf
+    BSgenome.Ecoli.NCBI.20080805 hgu219.db rae230aprobe hu6800.db rae230a.db
+    BSgenome.Hsapiens.UCSC.hg19.masked org.Xl.eg.db BSgenome.Rnorvegicus.UCSC.rn5
+    BSgenome.Scerevisiae.UCSC.sacCer1 org.Pt.eg.db
+    TxDb.Mmusculus.UCSC.mm39.knownGene soybeancdf BSgenome.Drerio.UCSC.danRer7
+    TxDb.Dmelanogaster.UCSC.dm6.ensGene XtraSNPlocs.Hsapiens.dbSNP144.GRCh38
+    TxDb.Mmusculus.UCSC.mm10.ensGene hugene20sttranscriptcluster.db humanCHRLOC
+    oligoData pd.mapping50k.xba240 org.Pf.plasmo.db pd.hg.u95av2 org.Ag.eg.db
+    human.db0 BSgenome.Dmelanogaster.UCSC.dm6 lumiHumanAll.db org.EcSakai.eg.db
+    mogene10sttranscriptcluster.db TxDb.Scerevisiae.UCSC.sacCer3.sgdGene
+    pd.hg18.60mer.expr rat2302.db pd.genomewidesnp.6 miRBaseVersions.db
+    Orthology.eg.db pd.hta.2.0 hugene10stv1cdf BSgenome.Athaliana.TAIR.TAIR9
+    BSgenome.Celegans.UCSC.ce10 lumiHumanIDMapping hgu95av2 mouse4302cdf
+    pd.mogene.1.0.st.v1 PANTHER.db pd.hugene.2.0.st hgu133plus2probe
+    genomewidesnp6Crlmm TxDb.Rnorvegicus.UCSC.rn5.refGene illuminaHumanv2.db
+    metaboliteIDmapping SNPlocs.Hsapiens.dbSNP150.GRCh38
+    TxDb.Hsapiens.UCSC.hg38.refGene ChemmineDrugs hugene11sttranscriptcluster.db
+    hta20transcriptcluster.db phastCons100way.UCSC.hg19 hgu133b.db
+    pd.genomewidesnp.5 pd.hg.u133a TxDb.Athaliana.BioMart.plantsmart28 HPO.db
+    grasp2db mogene20sttranscriptcluster.db miRNAtap.db pd.hugene.1.1.st.v1
+    pd.mapping250k.nsp Rattus.norvegicus hgfocus.db pd.mogene.2.0.st
+    hugene21sttranscriptcluster.db pd.mapping50k.hind240
+    huex10sttranscriptcluster.db BSgenome.Drerio.UCSC.danRer11 pd.mapping250k.sty
+    hgug4112a.db pd.hg.u219 ath1121501.db mgu74a.db pd.hu6800 pd.hugene.2.1.st
+    BSgenome.Cfamiliaris.UCSC.canFam3 mouse.db0 primeviewcdf
+    TxDb.Mmusculus.UCSC.mm39.refGene MPO.db pd.mouse430.2 illuminaMousev2.db
+    yeast2.db mouse430a2.db pd.hg.u95a rat2302cdf TxDb.Rnorvegicus.UCSC.rn6.refGene
+    pd.clariom.d.human chimp.db0 u133x3p.db ath1121501cdf bovine.db0 hgfocusprobe
+    hugene10stprobeset.db pd.clariom.s.human phastCons100way.UCSC.hg38
+    arabidopsis.db0 BSgenome.Rnorvegicus.UCSC.rn4 hthgu133a.db moe430a.db
+    HsAgilentDesign026652.db rat.db0 hgu133bcdf illuminaHumanv1.db fly.db0
+    genomewidesnp5Crlmm pd.rg.u34a pig.db0 yeast.db0 ag.db pd.mg.u74c pd.yeast.2
+    ragene11stprobeset.db chicken.db0 hgu219cdf mgu74av2.db pd.moe430b
+    pd.moex.1.0.st.v1 POCRCannotation.db canine.db0 human370v1cCrlmm pd.hg.u95c
+    BSgenome.Ggallus.UCSC.galGal3 celegans.db chicken.db pd.mogene.2.1.st
+    pd.rae230a GenomicState human610quadv1bCrlmm pd.tomato SHDZ.db worm.db0
+    canine2.db drosophila2.db pd.hg.u133a.2 rhesus.db0 rwgcod.db zebrafish.db0
+    hthgu133pluspmcdf pd.ecoli pd.maize pd.pae.g1a BSgenome.Dmelanogaster.UCSC.dm2
+    BSgenome.Osativa.MSU.MSU7 hthgu133acdf pd.poplar pd.rae230b pd.rhesus pd.rice
+    anopheles.db0 EnsDb.Rnorvegicus.v79 mgug4122a.db mwgcod.db pd.raex.1.0.st.v1
+    pd.ragene.1.0.st.v1 BSgenome.Drerio.UCSC.danRer10
+    clariomdhumantranscriptcluster.db hwgcod.db mogene10stv1cdf pd.soybean rnu34.db
+    FDb.InfiniumMethylation.hg18 hgu133atagcdf pd.citrus pd.drosgenome1 pd.hg.u95d
+    pd.ht.hg.u133.plus.pm pd.rg.u34c pd.wheat rgu34a.db ecoliK12.db0
+    hgu133plus2frmavecs mogene21sttranscriptcluster.db pd.mg.u74a xenopus.db0
+    malaria.db0 pd.rg.u34b pd.yg.s98 TxDb.Drerio.UCSC.danRer10.refGene hgu95ccdf
+    moe430bcdf pd.ag pd.hc.g110 pd.mogene.1.1.st.v1 BSgenome.Mmusculus.UCSC.mm8
+    maizeprobe mogene10stprobeset.db pd.cotton pd.mg.u74b rae230acdf ricecdf
+    u133x3pcdf hgu95d.db hgu95dcdf hugene11stprobeset.db
+    pd.2006.07.18.hg18.refseq.promoter pd.porcine riceprobe
+    BSgenome.Celegans.UCSC.ce6 hgu133afrmavecs hgu95bcdf
+    mogene11sttranscriptcluster.db Norway981.db pd.barley1 agprobe chickencdf
+    cottoncdf ecoliprobe h10kcod.db hapmap370k hgu133atagprobe hguDKFZ31.db
+    hguqiagenv3.db lumiMouseAll.db maizecdf mgu74bcdf pd.chicken pd.hg.focus
+    ri16cod.db ygs98.db bovinecdf clariomshumantranscriptcluster.db excluderanges
+    IlluminaHumanMethylation27k.db MafDb.ExAC.r1.0.nonTCGA.hs37d5 mouse4302probe
+    paeg1aprobe pd.bovine pd.canine pd.mu11ksuba pd.rat230.2 pd.u133.x3p
+    pd.x.tropicalis plasmodiumanophelescdf rae230b.db rae230bcdf
+    ragene11sttranscriptcluster.db synaptome.db BSgenome.Cfamiliaris.UCSC.canFam2
+    BSgenome.Hsapiens.NCBI.T2T.CHM13v2.0 ecolicdf hgu133a2probe hgu95b.db
+    hthgu133pluspmprobe mouse430a2cdf pd.ath1.121501 pd.hg.u95e pd.ht.mg.430a
+    pd.s.aureus poplarcdf rhesuscdf wheatprobe ygs98probe barley1cdf canineprobe
+    h20kcod.db hgu95ecdf OperonHumanV3.db pd.cytogenetics.array pd.moe430a
+    pd.mu11ksubb rtu34.db wheatcdf xenopuslaevisprobe BSgenome.Btaurus.UCSC.bosTau3
+    BSgenome.Hsapiens.UCSC.hg17 BSgenome.Mfascicularis.NCBI.5.0 celeganscdf cMAP
+    drosgenome1cdf hgfocuscdf hgu95aprobe hgu95c.db indac.db LAPOINTE.db mgu74acdf
+    mgu74aprobe mi16cod.db MmAgilentDesign026655.db Mu22v3.db pd.e.coli.2
+    pd.mirna.4.0 pd.ovigene.1.0.st xtropicalisprobe ath1121501probe barley1probe
+    bovineprobe ecoliSakai.db0 hgu133bprobe hgu95e.db medicagocdf mgu74c.db
+    moe430acdf nugohs1a520180.db pd.bovgene.1.1.st pd.drosophila.2 pd.hg.u95b
+    saureusprobe zebrafishcdf canine.db canine2cdf citruscdf drosgenome1probe
+    illuminaMousev1.db illuminaRatv1.db mgu74b.db mgu74cv2probe moe430aprobe
+    pd.aragene.1.0.st pd.hg.u133a.tag pd.mg.u74av2 pd.vitis.vinifera
+    pd.zebgene.1.1.st rgu34c.db vitisviniferaprobe BSgenome.Drerio.UCSC.danRer6
+    BSgenome.Ggallus.UCSC.galGal4 celegansprobe hcg110.db hi16cod.db mgu74av2cdf
+    mgu74cprobe mgu74cv2cdf PartheenMetaData.db pd.bsubtilis pd.mg.u74cv2
+    pd.rhegene.1.1.st poplarprobe rgu34cprobe rhesusprobe RmiR.hsa bovine.db
+    BSgenome.Mmulatta.UCSC.rheMac10 ecoli2probe HuO22.db illuminaHumanWGDASLv4.db
+    illuminaMousev1p1.db lumiMouseIDMapping MafDb.1Kgenomes.phase3.hs37d5
+    mgu74av2probe mgu74bprobe pd.charm.hg18.example pd.equgene.1.1.st
+    pd.mouse430a.2 pd.rjpgene.1.1.st porcinecdf porcineprobe primeviewprobe
+    rat2302probe rgug4131a.db SNPlocs.Hsapiens.dbSNP149.GRCh38 xlaevis.db
+    BSgenome.Drerio.UCSC.danRer5 BSgenome.Mmusculus.UCSC.mm9.masked
+    BSgenome.Ptroglodytes.UCSC.panTro2 drosophila2cdf FDb.UCSC.snp135common.hg19
+    hgu95bprobe hgu95cprobe hgu95dprobe hgu95eprobe htmg430pmcdf hu6800probe
+    hugene10stv1probe IlluminaHumanMethylation27kanno.ilmn12.hg19 m10kcod.db
+    mgu74ccdf mogene10stv1probe mouse430a2probe pd.hg.u133b pd.ht.hg.u133a
+    pd.rhegene.1.0.st pd.zebrafish rae230bprobe rgu34b.db RnAgilentDesign028282.db
+    tomatoprobe u133aaofav2cdf vitisviniferacdf BSgenome.Athaliana.TAIR.04232008
+    BSgenome.Mmusculus.UCSC.mm10.masked canine2probe citrusprobe hu35ksubc.db
+    IlluminaHumanMethylation27kmanifest illuminaHumanv2BeadID.db lumiRatAll.db
+    lumiRatIDMapping mgu74bv2probe pd.bovgene.1.0.st pd.canine.2
+    pd.ragene.1.1.st.v1 pd.ragene.2.0.st pd.sugar.cane pd.x.laevis.2 rgu34aprobe
+    rgu34bprobe caninecdf ecoliasv2probe FDb.UCSC.snp137common.hg19 hthgu133aprobe
+    htmg430pmprobe htratfocuscdf moe430bprobe mogene11stprobeset.db
+    pd.clariom.s.mouse pd.ecoli.asv2 pd.feinberg.hg18.me.hx1 pd.ovigene.1.1.st
+    pd.xenopus.laevis rgug4130a.db RmiR.Hs.miRNA soybeanprobe u133x3pprobe
+    xlaevis2probe BSgenome.Amellifera.BeeBase.assembly4
+    BSgenome.Btaurus.UCSC.bosTau6 cottonprobe hgug4100a.db hgug4110b.db
+    htratfocusprobe illuminaHumanWGDASLv3.db MafDb.1Kgenomes.phase1.hs37d5
+    medicagoprobe moex10sttranscriptcluster.db pd.cangene.1.0.st pd.mirna.3.1
+    pd.mta.1.0 porcine.db synaptome.data xenopuslaeviscdf xtropicaliscdf
+    yeast2probe BSgenome.Btaurus.UCSC.bosTau9 BSgenome.Gaculeatus.UCSC.gasAcu1
+    chickenprobe Hs6UG171.db htmg430acdf htmg430bprobe hu35ksubb.db hu35ksubcprobe
+    JazaeriMetaData.db Mu15v1.db nugohs1a520180cdf nugohs1a520180probe pd.mg.u74bv2
+    pd.plasmodium.anopheles pd.porgene.1.1.st plasmodiumanophelesprobe
+    ragene10sttranscriptcluster.db sugarcaneprobe BSgenome.Btaurus.UCSC.bosTau4
+    BSgenome.Mmulatta.UCSC.rheMac2 ecoli2.db hgu219probe hthgu133bprobe
+    HuExExonProbesetLocationHg18 HuExExonProbesetLocationHg19 moe430b.db
+    MoExExonProbesetLocation mogene20stprobeset.db pd.aragene.1.1.st pd.celegans
+    pd.cyngene.1.1.st pd.cyrgene.1.0.st ragene10stprobeset.db zebrafishprobe
+    BSgenome.Alyrata.JGI.v1 drosgenome1.db GGHumanMethCancerPanelv1.db
+    htrat230pmprobe mgug4121a.db mirna10cdf mu11ksubbprobe nugomm1a520177probe
+    pd.2006.07.18.mm8.refseq.promoter pd.feinberg.mm8.me.hx1 pd.mirna.1.0
+    pd.mirna.2.0 pd.ragene.2.1.st pd.rn.u34 pd.soygene.1.1.st pd.zebgene.1.0.st
+    r10kcod.db ragene10stv1cdf TxDb.Celegans.UCSC.ce11.refGene xlaevis2cdf
+    adme16cod.db BSgenome.Amellifera.UCSC.apiMel2 CTCF hthgu133bcdf hu35ksubaprobe
+    hu35ksubdprobe mgu74bv2cdf mu11ksuba.db mu11ksubaprobe mu19ksubb.db
+    pd.cyrgene.1.1.st pd.porgene.1.0.st TxDb.Ggallus.UCSC.galGal5.refGene
+    BSgenome.Sscrofa.UCSC.susScr3 clariomsmousetranscriptcluster.db hthgu133b.db
+    htmg430aprobe htmg430bcdf hu35ksubd.db IlluminaHumanMethylation450kprobe
+    mu19ksubc.db pd.cyngene.1.0.st pd.equgene.1.0.st RaExExonProbesetLocation
+    ragene21stprobeset.db TxDb.Drerio.UCSC.danRer11.refGene agcdf
+    BSgenome.Ptroglodytes.UCSC.panTro3 EnsDb.Mmusculus.v75 hgubeta7.db hgug4101a.db
+    hgug4845a.db hthgu133afrmavecs hu35ksuba.db hu35ksubbprobe
+    hugene21stprobeset.db mm24kresogen.db pd.felgene.1.0.st pd.felgene.1.1.st
+    pd.mirna.3.0 ragene20stprobeset.db rtu34probe
+    TxDb.Scerevisiae.UCSC.sacCer2.sgdGene zebrafish.db
+    BSgenome.Btaurus.UCSC.bosTau6.masked BSgenome.Hsapiens.UCSC.hg18.masked
+    BSgenome.Tgondii.ToxoDB.7.0 hs25kresogen.db htrat230pmcdf hu6800cdf
+    hugene20stprobeset.db m20kcod.db nugomm1a520177cdf pd.cangene.1.1.st
+    pd.medicago tomatocdf AHEnsDbs BSgenome.Mmusculus.UCSC.mm8.masked hgug4111a.db
+    MafDb.1Kgenomes.phase3.GRCh38 mgu74cv2.db mu19ksuba.db
+    pd.081229.hg18.promoter.medip.hx1 pd.2006.10.31.rn34.refseq.promoter
+    pd.rcngene.1.1.st ragene10stv1probe ragene20sttranscriptcluster.db ygs98cdf
+    hugene.1.0.st.v1frmavecs mgug4120a.db mu11ksubb.db test3cdf
+    FDb.FANTOM4.promoters.hg19 huex10stprobeset.db HuExExonProbesetLocation
+    humanomni25quadv1bCrlmm mgug4104a.db rgu34bcdf SomaScan.db
+    BSgenome.Hsapiens.UCSC.hg38.dbSNP151.major BSgenome.Rnorvegicus.UCSC.rn7
+    clariomdhumanprobeset.db LymphoSeqDB MafDb.gnomAD.r2.1.GRCh38 pedbarrayv10.db
+    rgu34acdf rtu34cdf mogene21stprobeset.db mouse4302frmavecs mpedbarray.db
+    pd.margene.1.1.st pd.rusgene.1.1.st pd.soygene.1.0.st pedbarrayv9.db
+    ragene21sttranscriptcluster.db rguatlas4k.db EPICv2manifest gp53cdf
+    human650v3aCrlmm mu19ksubbcdf pd.rabgene.1.1.st rgug4105a.db rnu34probe
+    XtraSNPlocs.Hsapiens.dbSNP144.GRCh37 BSgenome.Hsapiens.UCSC.hg38.dbSNP151.minor
+    BSgenome.Mmulatta.UCSC.rheMac3 BSgenome.Rnorvegicus.UCSC.rn5.masked
+    BSgenome.Sscrofa.UCSC.susScr11 hguatlas13k.db hpAnnot humanomni1quadv1bCrlmm
+    mguatlas5k.db pd.drogene.1.0.st pd.nugo.hs1a520180 pd.nugo.mm1a520177
+    pd.rjpgene.1.0.st pd.rusgene.1.0.st saureuscdf BSgenome.Btaurus.UCSC.bosTau8
+    BSgenome.Cfamiliaris.UCSC.canFam3.masked
+    BSgenome.Gaculeatus.UCSC.gasAcu1.masked cyp450cdf ecoli2cdf human1mduov3bCrlmm
+    human370quadv3cCrlmm moex10stprobeset.db pd.elegene.1.1.st pd.guigene.1.1.st
+    rattoxfxprobe rnu34cdf Roberts2005Annotation.db hcg110cdf human550v3bCrlmm
+    paeg1acdf pd.elegene.1.0.st ratCHRLOC test2cdf test3probe
+    BSgenome.Amellifera.UCSC.apiMel2.masked BSgenome.Drerio.UCSC.danRer7.masked
+    BSgenome.Ggallus.UCSC.galGal4.masked fitCons.UCSC.hg19 hcg110probe hu35ksubacdf
+    hu35ksubbcdf human1mv1cCrlmm human660quadv1aCrlmm mgu74bv2.db mu11ksubbcdf
+    mu6500subdcdf pd.chigene.1.0.st pd.chogene.2.0.st pd.margene.1.0.st
+    pd.medgene.1.0.st pd.rcngene.1.0.st phastCons7way.UCSC.hg38 raex10stprobeset.db
+    TxDb.Rnorvegicus.UCSC.rn7.refGene yeast2cdf
+    BSgenome.Btaurus.UCSC.bosTau3.masked hivprtplus2cdf hu35ksubdcdf
+    humanomniexpress12v1bCrlmm LowMACAAnnotation nugomm1a520177.db
+    TxDb.Btaurus.UCSC.bosTau9.refGene ye6100subdcdf
+    BSgenome.Drerio.UCSC.danRer6.masked BSgenome.Rnorvegicus.UCSC.rn4.masked
+    BSgenome.Sscrofa.UCSC.susScr3.masked BSgenome.Tguttata.UCSC.taeGut1
+    bsubtilisprobe ecoliasv2cdf hgu133a2frmavecs hthgu133pluspm.db hu6800subacdf
+    hu6800subbcdf humancytosnp12v2p1hCrlmm MafDb.ExAC.r1.0.hs37d5 mirna102xgaincdf
+    mu6500subccdf pd.chogene.2.1.st pd.fingene.1.0.st pd.rabgene.1.0.st
+    phastCons30way.UCSC.hg38 rgu34ccdf TxDb.Hsapiens.BioMart.igis
+    BSgenome.Hsapiens.UCSC.hg17.masked BSgenome.Mmulatta.UCSC.rheMac2.masked
+    BSgenome.Mmulatta.UCSC.rheMac3.masked BSgenome.Ptroglodytes.UCSC.panTro2.masked
+    MafDb.gnomADex.r2.1.hs37d5 mirna20cdf mu19ksubccdf mu6500subacdf
+    pd.chigene.1.1.st pd.drogene.1.1.st pd.fingene.1.1.st rattoxfxcdf sugarcanecdf
+    test1cdf BSgenome.Btaurus.UCSC.bosTau4.masked
+    BSgenome.Ggallus.UCSC.galGal3.masked BSgenome.Ggallus.UCSC.galGal6 bsubtiliscdf
+    hu35ksubccdf MafDb.ExAC.r1.0.GRCh38 mirna10probe pd.clariom.s.human.ht
+    pd.medgene.1.1.st pd.rta.1.0 raex10sttranscriptcluster.db
+    clariomshumanhttranscriptcluster.db MafH5.gnomAD.v4.0.GRCh38
+    mta10transcriptcluster.db mu11ksubacdf mu19ksubacdf pd.guigene.1.0.st
+    TxDb.Sscrofa.UCSC.susScr11.refGene ye6100subbcdf
+    BSgenome.Cfamiliaris.UCSC.canFam2.masked BSgenome.Drerio.UCSC.danRer5.masked
+    BSgenome.Mfuro.UCSC.musFur1 BSgenome.Ptroglodytes.UCSC.panTro3.masked
+    clariomsmousehttranscriptcluster.db ENCODExplorerData geneplast.data
+    hu6800subccdf huex.1.0.st.v2frmavecs MafDb.gnomAD.r2.1.hs37d5
+    MafDb.TOPMed.freeze5.hg19 mu6500subbcdf pd.clariom.s.mouse.ht ye6100subacdf
+    EnsDb.Rnorvegicus.v75 hta20probeset.db hu6800subdcdf
+    MafDb.1Kgenomes.phase1.GRCh38 mouseCHRLOC rta10transcriptcluster.db
+    TxDb.Mmulatta.UCSC.rheMac10.refGene BSgenome.Mmulatta.UCSC.rheMac8
+    BSgenome.Vvinifera.URGI.IGGP12Xv2 htmg430pm.db mta10probeset.db ye6100subccdf
+    BSgenome.Hsapiens.UCSC.hs1 BSgenome.Ptroglodytes.UCSC.panTro5
+    BSgenome.Vvinifera.URGI.IGGP8X geneplast.data.string.v91 humanomni5quadv1bCrlmm
+    TxDb.Athaliana.BioMart.plantsmart25 TxDb.Athaliana.BioMart.plantsmart51
+    TxDb.Rnorvegicus.BioMart.igis BSgenome.Vvinifera.URGI.IGGP12Xv0 chromhmmData
+    mouse430a2frmavecs pd.clariom.s.rat pd.clariom.s.rat.ht
+    BSgenome.Ggallus.UCSC.galGal5 BSgenome.Ptroglodytes.UCSC.panTro6
+    BSgenome.Tguttata.UCSC.taeGut2 EuPathDB
+    IlluminaHumanMethylationEPICanno.ilm10b3.hg19 MafDb.TOPMed.freeze5.hg38
+    mogene.1.0.st.v1frmavecs rGenomeTracksData rta10probeset.db
+    TxDb.Btaurus.UCSC.bosTau8.refGene TxDb.Sscrofa.UCSC.susScr3.refGene
+    ygs98frmavecs BioMartGOGeneSets BSgenome.Dmelanogaster.UCSC.dm3.masked
+    BSgenome.Tguttata.UCSC.taeGut1.masked Hspec MafDb.gnomADex.r2.1.GRCh38
+    TxDb.Ggallus.UCSC.galGal4.refGene TxDb.Ggallus.UCSC.galGal6.refGene
+    TxDb.Mmulatta.UCSC.rheMac3.refGene TxDb.Mmulatta.UCSC.rheMac8.refGene
+    UniProtKeywords BSgenome.Amellifera.NCBI.AmelHAv3.1 BSgenome.Gmax.NCBI.Gmv40
+    clariomsrattranscriptcluster.db hthgu133plusa.db
+    TxDb.Ptroglodytes.UCSC.panTro4.refGene GeneSummary
+    MafDb.ExAC.r1.0.nonTCGA.GRCh38 BSgenome.Aofficinalis.NCBI.V1
+    TENET.AnnotationHub AHMeSHDbs alternativeSplicingEvents.hg19
+    BSgenome.Mfascicularis.NCBI.6.0 TxDb.Ptroglodytes.UCSC.panTro5.refGene
+    alternativeSplicingEvents.hg38 BSgenome.Carietinum.NCBI.v1
+    BSgenome.Creinhardtii.JGI.v5.6 BSgenome.Dmelanogaster.UCSC.dm2.masked
+    BSgenome.Mdomestica.UCSC.monDom5 EpiTxDb.Hs.hg38
+    IlluminaHumanMethylationMSAmanifest rat2302frmavecs org.Mxanthus.db
+    BSgenome.Cjacchus.UCSC.calJac3 BSgenome.Cjacchus.UCSC.calJac4
+    BSgenome.Ppaniscus.UCSC.panPan2 TxDb.Cfamiliaris.UCSC.canFam3.refGene
+    BSgenome.Ppaniscus.UCSC.panPan1 AHLRBaseDbs AHPathbankDbs
+    BSgenome.Btaurus.UCSC.bosTau9.masked BSgenome.Dvirilis.Ensembl.dvircaf1
+    hspeccdf AHCytoBands AHPubMedDbs AHWikipathwaysDbs
+    clariomsrathttranscriptcluster.db htrat230pm.db htratfocus.db
+    TxDb.Rnorvegicus.UCSC.rn6.ncbiRefSeq
+    BSgenome.CneoformansVarGrubiiKN99.NCBI.ASM221672v1 EpiTxDb.Sc.sacCer3
+    IlluminaHumanMethylationMSAanno.ilm10a1.hg38 UCSCRepeatMasker
+    ath1121501frmavecs CENTREannotation AlphaMissense.v2023.hg38 cadd.v1.6.hg38
+    EpiTxDb.Mm.mm10 phastCons35way.UCSC.mm39 TxDb.Ptroglodytes.UCSC.panTro6.refGene
+    htmg430a.db org.Hbacteriophora.eg.db AlphaMissense.v2023.hg19 gwascatData
+    hthgu133plusb.db htmg430b.db TxDb.Hsapiens.UCSC.hg19.refGene cadd.v1.6.hg19
+    ontoProcData phyloP35way.UCSC.mm39 scAnnotatR.models
+    TxDb.Cfamiliaris.UCSC.canFam4.refGene TxDb.Cfamiliaris.UCSC.canFam5.refGene
+    TxDb.Cfamiliaris.UCSC.canFam6.refGene
+
+Timeout downloading https://bioconductor.org/packages/3.22/data/annotation/src/contrib/MafDb.gnomAD.r2.1.GRCh38_3.10.0.tar.gz so adjust timeout.
+
+    wget https://bioconductor.org/packages/3.22/data/annotation/src/contrib/MafDb.gnomAD.r2.1.GRCh38_3.10.0.tar.gz
+    R CMD INSTALL MafDb.gnomAD.r2.1.GRCh38_3.10.0.tar.gz
+
+*OR ALTERNATIVELY*
+
+    options(timeout = 1200)
+    BiocManager::install('MafDb.gnomAD.r2.1.GRCh38')
+
+
+Installing all ExperimentData packages ...
+------------------------------------------
+
+    dd <- read.delim('/sw/apps/R_packages/external_tarballs/ExperimentData-3.22.txt', header=FALSE, colClasses="character")[,1]
+    BiocManager::install(dd)
+
+Packages listed in /sw/apps/R_packages/external_tarballs/ExperimentData-3.22.txt are:
+
+    TCGAbiolinksGUI.data celldex ALL HSMMSingleCell airway geneLenDataBase scRNAseq
+    bcellViper tximportData dorothea pasilla RNAseqData.HNRNPC.bam.chr14 sesameData
+    affydata msigdb ChAMPdata GSVAdata msdata pasillaBamSubset TENxPBMCData
+    Illumina450ProbeVariants.db minfiData bladderbatch golubEsets faahKO depmap
+    curatedMetagenomicData humanStemCell gageData FlowSorted.Blood.450k pRolocdata
+    spatialLIBD ALLMLL zebrafishRNASeq flowWorkspaceData FlowSorted.Blood.EPIC
+    DMRcatedata curatedTCGAData RTCGA.clinical SpikeInSubset STexampleData
+    yeastNagalakshmi muscData systemPipeRdata TENxBrainData CLL DropletTestFiles
+    KEGGdzPathwaysGEO macrophage JASPAR2014 JASPAR2016 MOFAdata ELMER.data
+    MouseGastrulationData h5vcData breastCancerMAINZ minfiDataEPIC DLBCL
+    breastCancerVDX fibroEset HDCytoData methylclockData breastCancerUPP
+    QDNAseq.hg19 CCl4 hapmap100kxba RTCGA.mRNA RnBeads.hg19 breastCancerNKI fission
+    ewceData RTCGA.rnaseq maqcExpression4plex breastCancerTRANSBIG
+    tweeDEseqCountData estrogen RforProteomics yeastRNASeq hapmapsnp6
+    breastCancerUNT HelloRangesData leeBamViews AffymetrixDataTestFiles
+    IlluminaDataTestFiles microbiomeDataSets bsseqData curatedOvarianData
+    lumiBarnes genomationData EGSEAdata RnBeads.hg38 lungExpression yeastCC
+    chipenrich.data GWASdata RTCGA.miRNASeq SpikeIn gaschYHS RnaSeqSampleSizeData
+    RTCGA.mutations DAPARdata leukemiasEset easierData hapmapsnp5 DuoClustering2018
+    rcellminerData RnBeads.mm9 crisprScoreData pumadata yeastExpData harbChIP
+    KEGGandMetacoreDzPathwaysGEO MAQCsubset mvoutData Neve2006 ProData beta7
+    gcspikelite Hiiragi2013 derfinderData ecoliLeucine RTCGA.methylation RTCGA.RPPA
+    SBGNview.data RTCGA.CNV SFEData AmpAffyExample AneuFinderData ccdata
+    RUVnormalizeData imcdatasets dyebiasexamples HCAData HEEBOdata RTCGA.PANCAN12
+    antiProfilesData M3DExampleData MEDIPSData hapmap100khind QDNAseq.mm10
+    RcisTarget.hg19.motifDBs.cisbpOnly.500bp curatedBladderData kidpack
+    mosaicsExample TabulaMurisSenisData frmaExampleData
+    PWMEnrich.Hsapiens.background SNAGEEdata colonCA davidTiling HMP16SData
+    MEEBOdata cancerdata dressCheck Fletcher2013b RnBeads.mm10 TCGAMethylation450k
+    bronchialIL13 ITALICSData mCSEAdata SomaticCancerAlterations FANTOM3and4CAGE
+    RMassBankData signatureSearchData CardinalWorkflows miRNATarget NxtIRFdata
+    TBX20BamSubset XhybCasneuf breakpointRdata BloodCancerMultiOmics2017
+    LungCancerLines ChIPXpressData ConnectivityMap curatedBreastData
+    GeuvadisTranscriptExpr mtbls2 metaMSdata PasillaTranscriptExpr pepDat
+    tinesath1probe ffpeExampleData hapmap500knsp PREDAsampledata
+    PWMEnrich.Dmelanogaster.background aracne.networks cMap2data grndata HD2013SGI
+    hgu2beta7 brgedata chromstaRData mammaPrintData beadarrayExampleData COSMIC.67
+    SingleCellMultiModal CopyhelpeR hapmap500ksty scpdata affycompData fabiaData
+    simpIntLists TENxVisiumData Affyhgu133Plus2Expr
+    FlowSorted.CordBloodCombined.450k HMP2Data TabulaMurisData Fletcher2013a
+    FlowSorted.DLPFC.450k IHWpaper SNAData FlowSorted.CordBloodNorway.450k
+    prebsdata TargetSearchData COPDSexualDimorphism.data FlowSorted.CordBlood.450k
+    pd.atdschip.tiling plotgardenerData tissueTreg Affymoe4302Expr
+    GenomicDistributionsData HiCDataHumanIMR90 HIVcDNAvantWout03 tinesath1cdf
+    PWMEnrich.Mmusculus.background TCGAWorkflowData Iyer517 DeSousa2013
+    EatonEtAlChIPseq ReactomeGSA.data SCLCBam seqc stemHypoxia ARRmData
+    minionSummaryData rheumaticConditionWOLLBOLD msd16s OMICsPCAdata RegParallel
+    seventyGeneData Single.mTEC.Transcriptomes BeadArrayUseCases PathNetData FIs
+    GSBenchMark COHCAPanno DrugVsDiseasedata HiContactsData rRDPData BioImageDbs
+    HarmanData LiebermanAidenHiC2009 yeastGSData Affyhgu133aExpr ASICSdata
+    timecoursedata WES.1KG.WUGSC MSMB blimaTestingData DvDdata GSE62944
+    LungCancerACvsSCCGEO lydata ptairData chipseqDBData cnvGSAdata NCIgraphData
+    biotmleData HiCDataLymphoblast MMDiffBamSubset PCHiCdata RnBeads.rn5
+    shinyMethylData TargetScoreData KOdata RITANdata seq2pathway.data
+    healthyFlowData hgu133plus2barcodevecs WGSmapp Affyhgu133A2Expr furrowSeg
+    RGMQLlib ChimpHumanBrainData PepsNMRData MerfishData serumStimulation tartare
+    hgu133plus2CellScore MethylAidData prostateCancerCamcap prostateCancerGrasso
+    diggitdata msPurityData NanoporeRNASeq topdownrdata CluMSIDdata
+    MouseThymusAgeing biscuiteerData orthosData RRBSdata DonaPLLP2013 HCATonsilData
+    ChIPexoQualExample ListerEtAlBSseq NGScopyData nullrangesData bodymapRat
+    DExMAdata miRcompData msqc1 SNPhoodData SomatiCAData TCGAcrcmRNA
+    VariantToolsData adductData flowPloidyData scMultiome CRCL18
+    mouse4302barcodevecs SpatialDatasets CONFESSdata CopyNeutralIMA
+    epimutacionsData MetaGxBreast optimalFlowData scanMiRData vulcandata
+    AshkenazimSonChr21 prostateCancerVarambally QUBICdata sampleClassifierData
+    scTHI.data AssessORFData BeadSorted.Saliva.EPIC microRNAome nanotubes
+    prostateCancerTaylor RNAmodR.Data EpiMix.data hgu133abarcodevecs
+    OnassisJavaLibs diffloopdata MUGAExampleData prostateCancerStockholm
+    cfToolsData fourDNData PtH2O2lipids CellMapperData DNAZooData NestLink
+    NetActivityData SubcellularSpatialData tofsimsData curatedAdipoRNA SVM2CRMdata
+    TENxBUSData etec16s gpaExample octad.db clustifyrdatahub gDRtestData oct4
+    spqnData GIGSEAdata HumanAffyData MicrobiomeBenchmarkData CytoMethIC
+    TCGAcrcmiRNA TMExplorer WeberDivechaLCdata xcoredata curatedTBData EpipwR.data
+    gDNAinRNAseqData curatedAdipoChIP GSE103322 LRcellTypeMarkers MACSdata
+    marinerData GSE13015 HarmonizedTCGAData MetaScope MethylSeqData
+    PhyloProfileData raerdata scATAC.Explorer TENxXeniumData TumourMethData
+    CLLmethylation curatedPCaData emtdata mcsurvdata celarefData curatedAdipoArray
+    FieldEffectCrc healthyControlsPresenceChecker HighlyReplicatedRNASeq
+    multiWGCNAdata qPLEXdata SimBenchData VectraPolarisData BioPlex
+    SingleMoleculeFootprintingData humanHippocampus2024 MetaGxPancreas smokingMouse
+    TimerQuant MouseAgingData ObMiTi scaeData tuberculosis GSE159526 HiBED
+    preciseTADhub CoSIAdata muleaData ProteinGymR spatialDmelxsim bugphyzz LegATo
+    TransOmicsData eoPredData JohnsonKinaseData muSpaData TENET.ExperimentHub
+    homosapienDEE2CellScore MetaGxOvarian curatedCRCData CENTREprecomputed
+    AWAggregatorData iModMixData ChIPDBData DoReMiTra nmrdata
+
+Final cleanup.
+
+    wget https://bioconductor.org/packages/3.19/data/experiment/src/contrib/curatedCRCData_2.35.0.tar.gz
+    R CMD INSTALL curatedCRCData_2.35.0.tar.gz
+
+    git clone --recursive https://git.bioconductor.org/packages/MetaGxOvarian
+
+    install.packages('MetaGxOvarian', repos=NULL)
+
+    wget https://cran.r-project.org/src/contrib/reticulate_1.45.0.tar.gz
+    module load python/3.12.7
+    R CMD INSTALL reticulate_1.45.0.tar.gz
+
+    BiocManager::install("BeadDataPackR")
+    BiocManager::install("beadarrayExampleData")
+
+    git clone --recursive https://git.bioconductor.org/packages/beadarray
+
+    install.packages('beadarray', repos=NULL)
+
+    BiocManager::install("BeadDataPackR")
+
+    
 liana
------
+=====
 
-    cd /sw/apps/R_packages
-    cd 4.3.1
-    source source-for-setup
-    chmod u+w $R_LIBS_USER
-
-This does not install cleanly using remotes::install_github() or
-devtools::install_github(), but will install cleanly cloning the directory and
-installing directly within it.  So do that.
-
-    cd external/
-    ml git/2.44.0
-    git clone --recursive https://github.com/saezlab/liana/
-    cd liana
-
-Within R:
-
-    install.packages('.', repos=NULL)
-
-Within R, I ran the tutorial examples from
-<https://saezlab.github.io/liana/articles/liana_tutorial.html> and they seemed
-to work as expected.
-
-    library(tidyverse)
-    library(magrittr)
-    library(liana)
-
-    show_resources()
-    show_methods()
-
-    liana_path <- system.file(package = "liana")
-    testdata <- readRDS(file.path(liana_path , "testdata", "input", "testdata.rds"))
-    testdata %>% dplyr::glimpse()
-    liana_test <- liana_wrap(testdata)
-    liana_test %>% dplyr::glimpse()
-    liana_test <- liana_test %>% liana_aggregate()
-    dplyr::glimpse(liana_test)
-    liana_test %>% liana_dotplot(source_groups = c("B"), target_groups = c("NK", "CD8 T", "B"), ntop = 20)
-    liana_trunc <- liana_test %>% filter(aggregate_rank <= 0.01)
-    heat_freq(liana_trunc)
-    p <- chord_freq(liana_trunc, source_groups = c("CD8 T", "NK", "B"), target_groups = c("CD8 T", "NK", "B"))
-    sce <- readRDS(file.path(liana_path , "testdata", "input", "testsce.rds"))
-    cpdb_test <- liana_wrap(sce, method = 'cellphonedb', resource = c('CellPhoneDB'), permutation.params = list(nperms=100, parallelize=FALSE, workers=4), expr_prop=0.05)
-    cpdb_int <- cpdb_test %>% filter(pvalue <= 0.05) %>% rank_method(method_name = "cellphonedb", mode = "magnitude") %>% distinct_at(c("ligand.complex", "receptor.complex")) %>% head(20)
-    cpdb_test %>% inner_join(cpdb_int, by = c("ligand.complex", "receptor.complex")) %>% mutate(pvalue = -log10(pvalue + 1e-10)) %>% liana_dotplot(source_groups = c("c"), target_groups = c("c", "a", "b"), specificity = "pvalue", magnitude = "lr.mean", show_complex = TRUE, size.label = "-log10(p-value)")
-    complex_test <- liana_wrap(testdata, method = c('natmi', 'sca', 'logfc'), resource = c('CellPhoneDB'))
-    complex_test %>% liana_aggregate()
-    geometric_mean <- function(vec){exp(mean(log(vec)))}
-    liana_test <- liana_wrap(testdata, method = c('cellphonedb', 'sca'), resource = 'Consensus', permutation.params = list( nperms = 10 # here we run cpdb it only with 10 permutations), complex_policy="geometric_mean")
-    liana_test %>% dplyr::glimpse()
-R_packages/4.5.1
-========================
-
-<http://>
-
-Used under license:
-Various
+    remotes::install_github('saezlab/liana')
 
 
-Structure creating script (makeroom_R_packages_4.5.1.sh) moved to /sw/apps/R_packages/makeroom_4.5.1.sh
+The remainder of BioConductor 3.22
+==================================
 
-LOG
----
+Install the remainder of BioConductor 3.22.  Created bioc.inst1.R to manage this.
 
-    /home/douglas/bin/makeroom.sh "-f" "-c" "apps" "-t" "R_packages" "-v" "4.5.1" "-d" "Omnibus package containing many R packages from CRAN, BioConductor and other user-requested sources. This is not as comprehensive as previous versions of R_packages, but still contains many packages" "-l" "Various"
-    ./makeroom_R_packages_4.5.1.sh
+    setwd("/sw/apps/R_packages/4.5.1")
+    source("bioc.inst1.R")
+
+Several failed to install.
+
+    AlphaMissenseR BayesSpace BiocWorkflowTools CAGEWorkflow CAGEfightR CAGEr
+    CBNplot CCPlotR CSOA CVXR ChemmineOB ChromSCape ClustIRR CuratedAtlasQueryR
+    CytoML FLAMES GladiaTOX HMP2Data HPO.db HilbertVisGUI IntEREst Moonlight2R OHCA
+    PMCMRplus QUBIC RMariaDB RNAseq123 RankProd RbowtieCuda RcisTarget RedisParam
+    Rmpfr Rmpi SingleMoleculeFootprinting SpaceTroope SpatialExperimentIO SpectriPy
+    adductomicsR alabaster.sfe archive arrow autonomics cTRAP ccfindR cfDNAPro
+    cytoviewer dandelionR destiny duckdb epivizrStandalone gD gDRcore gDRstyle
+    gDRutils geneXtendeR git2r gmapR iBBiG maEndToEnd mosbi nearBynding octad
+    openCyto pqsfinder redux rexposome rqubic rsbml runibic sfarrow tiledb xenLite
+
+and others
+
+Could not install several because 'duckdb' kept kitting the 1800s install
+timeout.  So:
+
+    q()
+    export _R_INSTALL_PACKAGES_ELAPSED_TIMEOUT_="2h"
+    R --no-init-file
+
+and go again. It worked!
+
+HMP2Data fails.
+
+    Installing package(s) 'HMP2Data'
+    trying URL 'https://bioconductor.org/packages/3.22/data/experiment/src/contrib/HMP2Data_1.24.0.tar.gz'
+    Content type 'application/x-gzip' length 5396882 bytes (5.1 MB)
+    ==================================================
+    downloaded 5.1 MB
+
+    * installing *source* package �HMP2Data� ...
+    ** this is package �HMP2Data� version �1.24.0�
+    ** using staged installation
+    ** R
+    ** data
+    ** inst
+    ** byte-compile and prepare package for lazy loading
+    Error: object �id� is not exported by 'namespace:dplyr'
+    Execution halted
+    ERROR: lazy loading failed for package �HMP2Data�
+    * removing �/sw/apps/R_packages/4.5.1/rackham/HMP2Data�
+
+Continuing. biclust archived.
+
+    install.packages('additivityTests')
+
+    wget https://cran.r-project.org/src/contrib/Archive/biclust/biclust_2.0.3.1.tar.gz
+    R CMD INSTALL biclust_2.0.3.1.tar.gz
+
+    q()
+    module load boost/1.83.0-gcc12.3.0
+    R --no-init-file
+
+    BiocManager::install(c('pqsfinder')
+
+    q()
+    module unload boost
+    module load alphafold/3.0.1 alphafold_dataset/3.0.1
+    R --no-init-file
+
+    BiocManager::install(c('AlphaMissenseR'))
+
+    q()
+    module unload alphafold alphafold_dataset
+    R --no-init-file
+
+    wget https://cran.r-project.org/src/contrib/Archive/pryr/pryr_0.1.6.tar.gz
+    R CMD INSTALL pryr_0.1.6.tar.gz
+
+    BiocManager::install(c('CAGEfightR','CAGEr','CAGEWorkflow'))
+
+Cannot install 'BayesSpace','BiocWorkflowTools' because the former needs arrow and the latter, git2r.
+    
+For Rmpfr:
+
+    install.packages('Rmpfr', configure.args='--with-mpfr-include=$MPFR_ROOT/include --with-mpfr-lib=$MPFR_ROOT/lib')
+
+For others:
+
+    install.packages('RApiSerialize')
+
+    wget https://cran.r-project.org/src/contrib/Archive/ggbump/ggbump_0.1.0.tar.gz
+    R CMD INSTALL ggbump_0.1.0.tar.gz
+    wget https://cran.r-project.org/src/contrib/Archive/qs/qs_0.27.3.tar.gz
+    R CMD INSTALL qs_0.27.3.tar.gz
+    wget https://cran.r-project.org/src/contrib/Archive/blaster/blaster_1.0.7.tar.gz
+    R CMD INSTALL blaster_1.0.7.tar.gz
+
+    q()
+    module load openbabel/3.1.1-gcc12.3.0 boost/1.83.0-gcc12.3.0
+
+Fix up RPATH for libopenbabel.so.7
+
+    patchelf --set-rpath '/sw/libs/boost/1.83.0-gcc12.3.0/rackham/lib:/sw/libs/zlib/1.3.1/rackham/lib:/sw/libs/bzip2/1.0.8/rackham/lib:/sw/apps/xz/5.2.6/rackham/lib:/sw/apps/openbabel/3.1.1-gcc12.3.0/rackham/lib:/sw/comp/gcc/13.3.0_rackham/lib64' /sw/apps/openbabel/3.1.1-gcc12.3.0/rackham/lib/libopenbabel.so.7
+    R --no-init-file
+
+    R --no-init-file
+
+    BiocManager::install('ChemmineOB', configure.args='--with-openbabel-include=$OPENBABEL_ROOT/include/openbabel3 --with-openbabel-lib=$OPENBABEL_ROOT/lib')
+
+    q()
+    module unload openbabel  
+    R --no-init-file
+
+    BiocManager::install(c('CBNplot','CCPlotR','CSOA','CVXR','ChromSCape','ClustIRR','CuratedAtlasQueryR'))
+
+    q()
+    module load openmpi/4.1.6
+    R --no-init-file
+
+    install.packages('Rmpi')
+    install.packages('doMPI')
+    install.packages('bigGP')
+
+
+    module load MariaDB/10.2.11
+
+    install.packages(c('RMariaDB','RMySQL'))
+
+
+    wget https://cran.r-project.org/src/contrib/Archive/fuzzyjoin/fuzzyjoin_0.1.6.1.tar.gz
+    wget https://cran.r-project.org/src/contrib/Archive/seqminer/seqminer_9.7.tar.gz
+    R CMD INSTALL fuzzyjoin_0.1.6.1.tar.gz
+    R CMD INSTALL seqminer_9.7.tar.gz
+   
+    BiocManager::install('HiCool')
+
+HiCool will install many additional things when first run, as conda environments in the user's home.
+
+    q()
+    module load tbb/2020.3
+    R --no-init-file
+
+    BiocManager::install("openCyto")
+
+Using rust/1.85.1.
+
+    chmod -R u+w /sw/comp/rust/1.85.1/rackham
+
+    BiocManager::install(c('FLAMES'))
+    BiocManager::install(c('GladiaTOX'))
+
+HPO.db  fails:
+
+    BiocManager::install(c('HPO.db'))
+    ...
+    Error: package or namespace load failed for �HPO.db�:
+     .onLoad failed in loadNamespace() for 'HPO.db', details:
+      call: NULL
+      error: Replaced by more current version
+       Resource removed on: 2024-05-02
+
+HilbertVisGUI needs gtkmm and GTK+ and is not installed.
+
+    BiocManager::install(c('IntEREst','Moonlight2R','OHCA'))
+    BiocManager::install(c('FLAMES','GladiaTOX'))
+    BiocManager::install('QUBIC')
+    BiocManager::install('RankProd')
+
+These need git2r (libgit2) and are not installed:
+
+    RNAseq123
+    epivizrStandalone
+    gDRstyle
+
+These need CUDA and are not installed:
+
+    RbowtieCuda
+
+These need arrow and are not installed:
+
+    RcisTarget
+
+These need libhiredis and are not installed:
+
+    RedisParam
+    redux
+
+SingleMoleculeFootprinting fails with:
+
+    Error: object �filter� is not exported by 'namespace:plyranges'
+
+This builds arrow from scratch and works!
+
+    SpaceTrooper
+    SpatialExperimentIO
+
+Cannot be built with available python packages.  That's ok.
+
+    SpectriPy
+
+adductomicsR
+
+    wget https://cran.r-project.org/src/contrib/Archive/smoother/smoother_1.3.tar.gz
+    R CMD INSTALL smoother_1.3.tar.gz
+
+    BiocManager::install("adductomicsR")
+    
+continuing ...
+
+    module load libarchive/3.6.2
+
+    BiocManager::install("archive")
+    BiocManager::install("autonomics")
+    BiocManager::install("sfarrow")
+    BiocManager::install("alabaster.sfe")
+    BiocManager::install("cTRAP")
+    BiocManager::install("ccfindR")
+
+cfDNAPro failes because
+
+    BiocManager::install("cfDNAPro")
+    ...
+    Error: object �filter� is not exported by 'namespace:plyranges'
+    Execution halted
+
+continuing ...
+
+    BiocManager::install("cytoviewer")
+    BiocManager::install("destiny")
+    BiocManager::install("dandelionR")
+    BiocManager::install("GD")
+    BiocManager::install("gDRutils")
+    BiocManager::install("gDRcore")
+
+"gD" not available ??
+
+geneXtendeR errors:
+
+    BiocManager::install("geneXtendeR")
+    ...
+    Error: object �id� is not exported by 'namespace:dplyr'
+    Execution halted
+
+    BiocManager::install("")
+    BiocManager::install("")
+    BiocManager::install("")
+
+gmapR errors:
+
+    BiocManager::install("gmapR")
+    ...
+    ** testing if installed package can be loaded from temporary location
+    Error: package or namespace load failed for �gmapR� in dyn.load(file, DLLpath = DLLpath, ...):
+     unable to load shared object '/sw/apps/R_packages/4.5.1/rackham/00LOCK-gmapR/00new/gmapR/libs/gmapR.so':
+      /sw/apps/R_packages/4.5.1/rackham/00LOCK-gmapR/00new/gmapR/libs/gmapR.so: undefined symbol: __isoc23_sscanf
+
+continuing ...
+
+    BiocManager::install("iBBiG")
+
+    git clone https://git.bioconductor.org/packages/arrayQualityMetrics
+
+    install.packages('setRNG')
+    install.packages('arrayQualityMetrics', repos=NULL)
+    BiocManager::install("maEndToEnd")
+    BiocManager::install("mosbi")
+
+errors:
+
+    BiocManager::install("nearBynding")
+    ...
+    Error: object �filter� is not exported by 'namespace:plyranges'
+    Execution halted
+
+    BiocManager::install("octad")
+    ...
+    Error: object �id� is not exported by 'namespace:dplyr'
+    Execution halted
+
+    BiocManager::install("rsbml")
+    ...
+    Error: package or namespace load failed for �rsbml�:
+     .onLoad failed in loadNamespace() for 'rsbml', details:
+      call: dyn.load(file, DLLpath = DLLpath, ...)
+      error: unable to load shared object '/sw/apps/R_packages/4.5.1/rackham/00LOCK-rsbml/00new/rsbml/libs/rsbml.so':
+      /sw/libs/libSBML/5.20.2/rackham/lib/libsbml.so.5: undefined symbol: _ZTI14FbcSBasePlugin
+    Error: loading failed
+    Execution halted
+    ERROR: loading failed
+
+
+continuing ...
+
+    BiocManager::install("rexposome")
+    BiocManager::install("rqubic")
+    BiocManager::install("runibic")
+    BiocManager::install("sfarrow")  # already installed by earlier actions
+    BiocManager::install("xenLite")
+
+errors:
+
+    BiocManager::install("tiledb")  # already installed by earlier actions
+    ...
+    ** testing if installed package can be loaded from temporary location
+    Error: package or namespace load failed for �tiledb� in dyn.load(file, DLLpath = DLLpath, ...):
+     unable to load shared object '/sw/apps/R_packages/4.5.1/rackham/00LOCK-tiledb/00new/tiledb/libs/tiledb.so':
+      /lib64/libm.so.6: version `GLIBC_2.27' not found (required by /sw/apps/R_packages/4.5.1/rackham/00LOCK-tiledb/00new/tiledb/libs/../tiledb/lib/libtiledb.so.2.29)
+    Error: loading failed
+    Execution halted
+    ERROR: loading failed
+
+
+continuing ...
+
+    BiocManager::install(c('ChIPseeker','clusterProfiler','DOSE','enrichplot','GOSemSim','meshes',"ReactomePA"))
+
+All are installed.
+
+Final wrapup:
+
+    BiocManager::install()
+    BiocManager::valid()
+
+    'getOption("repos")' replaces Bioconductor standard repositories, see
+    'help("repositories", package = "BiocManager")' for details.
+    Replacement repositories:
+        CRAN: https://ftp.acc.umu.se/mirror/CRAN/
+
+    * sessionInfo()
+
+    R version 4.5.1 (2025-06-13)
+    Platform: x86_64-pc-linux-gnu
+    Running under: CentOS Linux 7 (Core)
+
+    Matrix products: default
+    BLAS/LAPACK: /sw/libs/openblas/0.3.29/rackham/lib/libopenblas_haswellp-r0.3.29.so;  LAPACK version 3.12.0
+
+    locale:
+     [1] LC_CTYPE=en_US.utf-8       LC_NUMERIC=C
+     [3] LC_TIME=en_US.utf-8        LC_COLLATE=en_US.utf-8
+     [5] LC_MONETARY=en_US.utf-8    LC_MESSAGES=en_US.utf-8
+     [7] LC_PAPER=en_US.utf-8       LC_NAME=C
+     [9] LC_ADDRESS=C               LC_TELEPHONE=C
+    [11] LC_MEASUREMENT=en_US.utf-8 LC_IDENTIFICATION=C
+
+    time zone: Europe/Stockholm
+    tzcode source: system (glibc)
+
+    attached base packages:
+    [1] stats     graphics  grDevices utils     datasets  methods   base
+
+    loaded via a namespace (and not attached):
+    [1] BiocManager_1.30.27 compiler_4.5.1      tools_4.5.1
+
+    Bioconductor version '3.22'
+
+      * 0 packages out-of-date
+      * 2 packages too new
+
+    create a valid installation with
+
+      BiocManager::install(c(
+        "basilisk.utils", "OmnipathR"
+      ), update = TRUE, ask = FALSE, force = TRUE)
+
+    more details: BiocManager::valid()$too_new, BiocManager::valid()$out_of_date
+
+    Warning message:
+    0 packages out-of-date; 2 packages too new
+
+
+At the end:
+
+    A total of 5426 R packages are installed
+    A total of 26846 packages are available in CRAN and BioConductor
+    1690 CRAN packages are installed, out of 23173 available
+    3631 BioConductor-specific packages are installed, out of 3673 available
+    103 other R packages are installed. These are not in CRAN/BioConductor, are only available in the CRAN/BioConductor archives, or are hosted on github, gitlab or elsewhere
+
+

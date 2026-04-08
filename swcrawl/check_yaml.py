@@ -11,6 +11,8 @@ import ruamel.yaml
 from optparse import OptionParser
 import fnmatch
 import ast
+from itertools import chain
+import pdb
 
 def removeDuplicates(lst):
     return list(set([i for i in lst]))
@@ -90,18 +92,23 @@ def fetch_data_to_yaml(db_path, query):
     
     return yaml_data
 
+
 def find_path_from_tool(TOOL):
-    for root, dirs, files in walklevel("/sw/", 2):
+    search_paths = ("/sw/apps", "/sw/bioinfo","/sw/build", "/sw/comp", "/sw/data", "/sw/libs", "/sw/parallel")
+    for path, dirs, files in chain.from_iterable(walklevel(p, 2) for p in search_paths):
         for dir in dirs:
-            if re.search(".*sw/apps/bioinfo.*", root):
+            if re.search(".*sw/apps/bioinfo.*", path):
+                continue
+            elif re.search(".*sw/apps/doug-dumping-ground.*", path):
                 continue
             elif fnmatch.fnmatch(dir, TOOL):
-                ans = root + "/" + dir
+                ans = path + "/" + dir
                 break
         else:
             continue
         break
     return ans
+
 
 def fetch_data_to_dict(db_path, query):
     if not os.path.exists(db_path):
@@ -164,7 +171,8 @@ def print_makeroom(makeroomfile):
 
 def check_makeroom(makeroomfile, mf, TOOL, VERSION):                    
     try: 
-        yamlfrommakeroom = yaml.safe_load(showmakeroomyaml(makeroomfile))
+        yamlfrommakeroom = yaml.load(showmakeroomyaml(makeroomfile), Loader=yaml.BaseLoader)
+        #yamlfrommakeroom['VERSION'] = str(yamlfrommakeroom['VERSION'])
     except:
         print("ERROR: loading yaml from makeroom " + makeroomfile)
     if yamlfrommakeroom['TOOL'] != TOOL:
@@ -172,7 +180,9 @@ def check_makeroom(makeroomfile, mf, TOOL, VERSION):
     if yamlfrommakeroom['LOCAL'] != mf:
         print("ERROR: makeroom LOCAL mf path" + yamlfrommakeroom['LOCAL'] + " != deduced path: /" + deduced_mf_path)
     if yamlfrommakeroom['VERSION'] != VERSION:
+        pdb.set_trace()
         print("ERROR: makeroom version: " + yamlfrommakeroom['VERSION'] + " != input VERSION: " + str(VERSION))
+
     return yamlfrommakeroom
         
 
@@ -187,6 +197,8 @@ def print_files_that_DB_finds_errors_in(TOOL):
         print(ver)
         sql_err = "SELECT DISTINCT path FROM yamlfiles WHERE yamlfiles.TOOL=\'" + TOOL + "\' AND yamlfiles.VERSION=\'" + ver + "\' AND yamlfiles.path NOT LIKE \'%" + ver + "%\'"
         sql = "SELECT DISTINCT path FROM yamlfiles WHERE yamlfiles.TOOL=\'" + TOOL + "\' AND yamlfiles.VERSION=\'" + ver + "\'"
+        #print(sql)
+        #pdb.set_trace()
         SQL_OUTPUT_ERROR[ver] = fetch_data_to_dict(db_path, sql_err)
         SQL_OUTPUT[ver] = fetch_data_to_dict(db_path, sql)
     for v in SQL_OUTPUT_ERROR:
@@ -300,7 +312,7 @@ if PATH == None:
             exit(1)
         exit(1)
 
-#dict_yaml = get_dict_from_makeroom_with_yaml_section(TOOL, PATH, VERSION)
-#show_yaml(dict_yaml, VERSION)
+dict_yaml = get_dict_from_makeroom_with_yaml_section(TOOL, PATH, VERSION)
+show_yaml(dict_yaml, VERSION)
 print_files_that_DB_finds_errors_in(TOOL)
 print_SQL_query(TOOL, VERSION, SQL_FIELD)

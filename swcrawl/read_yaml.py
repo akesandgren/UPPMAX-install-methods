@@ -8,6 +8,7 @@ import pwd
 import hashlib
 import subprocess
 from optparse import OptionParser
+from itertools import chain
 
 parser = OptionParser()
 parser.add_option("-r", action="store_true", dest="reset", default=False)
@@ -128,8 +129,11 @@ if options.reset == True:
     maketable_persons(DBcursor)
     maketable_yamlfiles(DBcursor)
 
-for root, dirs, files in walklevel("/sw/", 5):
+search_paths = ("/sw/apps", "/sw/bioinfo","/sw/build", "/sw/comp", "/sw/data", "/sw/libs", "/sw/parallel")
+for root, dirs, files in chain.from_iterable(walklevel(p, 2) for p in search_paths):
     if re.search('/sw/.+/src/', root):
+        continue
+    if re.search('/sw/apps/bioinfo/', root):
         continue
     if re.search('/sw/links/', root):
         continue
@@ -244,4 +248,4 @@ for root, dirs, files in walklevel("/sw/", 5):
                             db.rollback()
 # disconnect from server
 db.close()
-
+print("FINISHED")

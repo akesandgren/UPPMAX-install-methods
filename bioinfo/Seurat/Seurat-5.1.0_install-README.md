@@ -27,6 +27,7 @@ BPCells needs some special treatment
     tar xzvf v0.2.0.tar.gz
     cp -r BPCells-0.2.0 BPCells-0.2.0_fix
     vim BPCells-0.2.0_fix/r/configure
+    ml hdf5/1.14.0
   change line 34-35
         HDF5_CFLAGS="${HDF5_CFLAGS-}"
         HDF5_LIBS="${HDF5_LIBS--lhdf5}"

@@ -29,12 +29,12 @@ if [[ ! $SKIP_FIND_MODULES ]] ; then
 
     cd /sw
 
-    find apps      ${FIND_OPTS} -name '*install-README.md' | cpio -pdm $REPOSITORY &
-    find bioinfo   ${FIND_OPTS} -name '*install-README.md' | cpio -pdm $REPOSITORY &
-    find build     ${FIND_OPTS} -name '*install-README.md' | cpio -pdm $REPOSITORY &
-    find comp      ${FIND_OPTS} -name '*install-README.md' | cpio -pdm $REPOSITORY &
-    find libs      ${FIND_OPTS} -name '*install-README.md' | cpio -pdm $REPOSITORY &
-    find parallel  ${FIND_OPTS} -name '*install-README.md' | cpio -pdm $REPOSITORY &
+    find apps      ${FIND_OPTS} \( -name '*install-README.md' -o -name '*.def' \) | cpio -pdm $REPOSITORY &
+    find bioinfo   ${FIND_OPTS} \( -name '*install-README.md' -o -name '*.def' \) | cpio -pdm $REPOSITORY &
+    find build     ${FIND_OPTS} \( -name '*install-README.md' -o -name '*.def' \) | cpio -pdm $REPOSITORY &
+    find comp      ${FIND_OPTS} \( -name '*install-README.md' -o -name '*.def' \) | cpio -pdm $REPOSITORY &
+    find libs      ${FIND_OPTS} \( -name '*install-README.md' -o -name '*.def' \) | cpio -pdm $REPOSITORY &
+    find parallel  ${FIND_OPTS} \( -name '*install-README.md' -o -name '*.def' \) | cpio -pdm $REPOSITORY &
 
     wait
 
@@ -86,7 +86,7 @@ if [[ ! $SKIP_FIND_DATABASES ]] ; then
     find fastq_screen_data               -maxdepth 2 -name '*install-README.md' | cpio -pdm $DATA_REPOSITORY
     find gnomad_data                     -maxdepth 2 -name '*install-README.md' | cpio -pdm $DATA_REPOSITORY
     find iGenomes                        -maxdepth 2 -name '*install-README.md' | cpio -pdm $DATA_REPOSITORY
-    find ncbi_taxonomy                   -maxdepth 2 -name '*install-README.md' | cpio -pdm $DATA_REPOSITORY
+    find NCBI_taxonomy                   -maxdepth 2 -name '*install-README.md' | cpio -pdm $DATA_REPOSITORY
     find panther                         -maxdepth 2 -name '*install-README.md' | cpio -pdm $DATA_REPOSITORY
     find piper_references                -maxdepth 2 -name '*install-README.md' | cpio -pdm $DATA_REPOSITORY
     find pph2-db                         -maxdepth 2 -name '*install-README.md' | cpio -pdm $DATA_REPOSITORY
@@ -146,7 +146,7 @@ data_update  /sw/data/BUSCO_data         BUSCO-update-v1-lineage-sets.sh BUSCO-u
 
 data_update  /sw/data/blast_scripts      README.md README-uniprot.md update_blastdb.sh update_blastdb-uniprot.sh uniprot.mk install_check_prepdb_blastdb.sh remove_old_blastdb.sh cron-wrapper.sh crontab.txt test/test_blastdb.sh test/prots.fa test/nucls.fa test/*.out webpage.mk webpage.md webpage.html fixup
 
-data_update  /sw/data/ncbi_taxonomy      ncbi_taxonomy-update-dbs.sh crontab.txt webpage.html webpage.md webpage.mk
+data_update  /sw/data/NCBI_taxonomy      NCBI_taxonomy-update-dbs.sh crontab.txt webpage.html webpage.md webpage.mk
 
 # These databases are in /sw/data and DO NOT update via crontab.
 # Update the repository copy of their READMEs, scripts and other files.
